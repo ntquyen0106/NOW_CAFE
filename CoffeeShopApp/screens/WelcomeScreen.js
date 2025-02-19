@@ -1,66 +1,108 @@
 import React from "react";
-import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from "react-native";
+import { 
+  View, 
+  Text, 
+  ImageBackground, 
+  TouchableOpacity, 
+  StyleSheet, 
+  ScrollView, 
+  Dimensions 
+} from "react-native";
+
+// Lấy kích thước màn hình
+const { width, height } = Dimensions.get("window");
+
+// Tính toán tỷ lệ scale dựa trên màn hình chuẩn (ví dụ: iPhone 8)
+const baseWidth = 375;
+const baseHeight = 667;
+
+const scaleWidth = width / baseWidth;
+const scaleHeight = height / baseHeight;
+const scale = Math.min(scaleWidth, scaleHeight);
+
+// Hàm để tính toán kích thước responsive
+const normalize = (size) => {
+  return Math.round(scale * size);
+};
 
 const WelcomeScreen = ({ navigation }) => {
   return (
-    <ImageBackground
-      source={require("../assets/images/bg-welcome.png")}
-      style={styles.background}
+    <ScrollView 
+      contentContainerStyle={styles.container}
+      bounces={false}
     >
-      <View style={styles.overlay} />
-      
-      {/* Nội dung */}
-      <View style={styles.content}>
-        <Text style={styles.title}>COFFEE SHOP</Text>
-        <Text style={styles.subtitle}>Enjoy the drink coffee.</Text>
+      <ImageBackground
+        source={require("../assets/images/bg-welcome.png")}
+        style={styles.background}
+        resizeMode="cover"
+      >
+        <View style={styles.content}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>COFFEE SHOP</Text>
+            <Text style={styles.subtitle}>Enjoy the drink coffee.</Text>
+          </View>
 
-        {/* Nút "SHOP NOW" */}
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>SHOP NOW</Text>
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+          <TouchableOpacity 
+            style={styles.button}
+            onPress={() => navigation.navigate('Shop')}
+          >
+            <Text style={styles.buttonText}>SHOP NOW</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </ScrollView>
   );
 };
 
-// **Styles**
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    flexGrow: 1,
+    minHeight: height,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(255, 255, 255, 0.5)", // Hiệu ứng làm mờ ảnh nền
+  background: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
   },
   content: {
-    alignItems: "center",
-    position: "absolute",
-    bottom: 100,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: normalize(30),
+    paddingHorizontal: normalize(20),
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginTop: normalize(100),
   },
   title: {
-    fontSize: 24,
+    fontSize: normalize(40),
     fontWeight: "bold",
-    color: "#3B2F2F",
-    marginBottom: 10,
+    color: "#230C02",
+    marginBottom: normalize(20),
+    textAlign: "center",
   },
   subtitle: {
-    fontSize: 14,
-    color: "#3B2F2F",
-    marginBottom: 30,
+    fontSize: normalize(18),
+    color: "#230C02",
+    marginBottom: normalize(30),
+    textAlign: "center",
   },
   button: {
+    width: normalize(250),
     backgroundColor: "#3B2F2F",
-    paddingVertical: 12,
-    paddingHorizontal: 40,
-    borderRadius: 30,
+    paddingVertical: normalize(15),
+    paddingHorizontal: normalize(50),
+    borderRadius: normalize(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: normalize(30),
   },
   buttonText: {
-    color: "#FFF",
+    color: "#EEDDC9",
     fontWeight: "bold",
-    fontSize: 14,
+    fontSize: normalize(16),
+    textAlign: 'center',
   },
 });
 
