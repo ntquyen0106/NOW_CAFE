@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet, Dimensions, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TouchableOpacity, StyleSheet, Dimensions, Text, Animated } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const { width } = Dimensions.get("window");
 
@@ -14,24 +14,40 @@ const tabs = [
 
 export default function Footer() {
   const navigation = useNavigation();
-  const [selectedTab, setSelectedTab] = useState("Home");
+  const route = useRoute();
+  const [selectedTab, setSelectedTab] = useState(route.name);
+  const scaleAnim = useState(new Animated.Value(1))[0];
+
+  useEffect(() => {
+    setSelectedTab(route.name);
+  }, [route.name]);
+
+  const handlePress = (tab) => {
+    if (route.name !== tab.route) {
+      setSelectedTab(tab.name);
+      Animated.sequence([
+        Animated.timing(scaleAnim, { toValue: 1.2, duration: 150, useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
+      ]).start();
+      navigation.navigate(tab.route);
+    }
+  };
 
   return (
-    <View style={[styles.footer, { bottom: 16 }]}> 
+    <View style={[styles.footer, { bottom: 0 }]}> 
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab.name}
           style={styles.tabButton}
-          onPress={() => {
-            setSelectedTab(tab.name);
-            navigation.navigate(tab.route);
-          }}
+          onPress={() => handlePress(tab)}
         >
-          <AntDesign
-            name={tab.icon}
-            size={30}
-            color={selectedTab === tab.name ? "#3D1B00" : "#8B5E3C"}
-          />
+          <Animated.View style={{ transform: [{ scale: selectedTab === tab.route ? scaleAnim : 1 }] }}>
+            <AntDesign
+              name={tab.icon}
+              size={30}
+              color={selectedTab === tab.route ? "#3D1B00" : "#8B5E3C"}
+            />
+          </Animated.View>
         </TouchableOpacity>
       ))}
     </View>
@@ -45,11 +61,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#EADCC6",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: 70,
+    height: 80,
     alignItems: "center",
     width: width,
-    paddingBottom: 10,
     position: "absolute",
   },
-  tabButton: { alignItems: "center", flex: 1 },
+  tabButton: { alignItems: "center", flex: 1, paddingBottom: 10 },
 });

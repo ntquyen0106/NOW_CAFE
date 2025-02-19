@@ -15,21 +15,15 @@ export default function App() {
         <Stack.Screen name="Home" 
         component={HomeScreen} 
         options={{ headerShown: false }} />
+
+        <Stack.Screen name="Cart"
+        component={CartScreen} 
+        options={{ headerShown: false }} />
     
-      </Stack.Navigator>
-      <Stack.Navigator>
         <Stack.Screen name="Favorites" 
         component={FavoritesScreen} 
         options={{ headerShown: false }} />
     
-      </Stack.Navigator>
-      <Stack.Navigator>
-        <Stack.Screen name="Cart" 
-        component={CartScreen} 
-        options={{ headerShown: false }} />
-    
-      </Stack.Navigator>
-      <Stack.Navigator>
         <Stack.Screen name="Profile" 
         component={ProfileScreen} 
         options={{ headerShown: false }} />
