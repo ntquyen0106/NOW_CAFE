@@ -5,13 +5,18 @@ import HomeScreen from "./screens/HomeScreen.js";
 import CartScreen from "./screens/CartScreen.js";
 import FavoritesScreen from "./screens/FavoritesScreen.js";
 import ProfileScreen from "./screens/ProfileScreen.js";
+import WelcomeScreen from "./screens/WelcomeScreen.js";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" 
+        component={WelcomeScreen} 
+        options={{ headerShown: false }} />
+
         <Stack.Screen name="Home" 
         component={HomeScreen} 
         options={{ headerShown: false }} />
