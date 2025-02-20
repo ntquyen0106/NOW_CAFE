@@ -44,7 +44,7 @@ const WelcomeScreen = ({ navigation }) => {
 
           <TouchableOpacity 
             style={styles.button}
-            onPress={() => navigation.navigate('Shop')}
+            onPress={() => navigation.navigate('Login')}
           >
             <Text style={styles.buttonText}>SHOP NOW</Text>
           </TouchableOpacity>
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: normalize(30),
     paddingHorizontal: normalize(20),
+    marginTop: normalize(70),
   },
   textContainer: {
     alignItems: 'center',
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(30),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: normalize(30),
+    marginTop: normalize(100),
   },
   buttonText: {
     color: "#EEDDC9",
