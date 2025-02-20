@@ -192,17 +192,17 @@ const styles = StyleSheet.create({
     color: '#230C02',
     fontSize: normalize(15),
     marginBottom: normalize(8),
-    marginLeft: normalize(4),
+    //marginLeft: normalize(4),
     fontWeight: "bold",
   },
   input: {
     width: '100%',
     borderBottomWidth: 1,
     borderBottomColor: '#230C02',
-    
     fontSize: normalize(16),
     color: '#230C02',
     marginBottom: normalize(20),
+    outlineStyle: 'none',
   },
   passwordContainer: {
     position: 'relative',
@@ -214,8 +214,8 @@ const styles = StyleSheet.create({
     bottom: normalize(28),
   },
   eyeIcon: {
-    width: normalize(24),
-    height: normalize(24),
+    width: normalize(20),
+    height: normalize(20),
     tintColor: '#230C02',
   },
   forgotPasswordButton: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(30),
   },
   forgotPasswordText: {
-    color: "#230C02",
+    color: "#834D1E",
     fontSize: normalize(14),
     textDecorationLine: 'underline', 
     fontWeight: "bold",
