@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(15),
     marginBottom: normalize(8),
     marginLeft: normalize(4),
+    fontWeight: "bold",
   },
   input: {
     width: '100%',
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
     color: "#230C02",
     fontSize: normalize(14),
     textDecorationLine: 'underline', 
+    fontWeight: "bold",
   },
   loginButton: {
     width: '100%',
@@ -243,7 +245,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    
   },
   orDividerLine: {
     flex: 1,
@@ -254,6 +255,7 @@ const styles = StyleSheet.create({
     color: "#230C02",
     fontSize: normalize(14),
     marginHorizontal: normalize(15),
+    fontWeight: "bold",
   },
   socialButtonsContainer: {
     width: '100%',
@@ -278,11 +280,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
   },
   signupText: {
-    color: "#834D1E",
+    color: "#3B2F2F",
     fontSize: normalize(14),
+    fontWeight: "bold",
   },
   signupLink: {
-    color: "#3B2F2F",
+    color: "#834D1E",
     fontSize: normalize(14),
     fontWeight: "bold",
     textDecorationLine: 'underline',

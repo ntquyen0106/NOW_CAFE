@@ -8,23 +8,21 @@ import {
   ScrollView, 
   Dimensions, 
   Image,
-  ImageBackground
+  ImageBackground,
+  SafeAreaView,
+  Platform,
+  StatusBar
 } from "react-native";
 
-// Lấy kích thước màn hình
 const { width, height } = Dimensions.get("window");
+const scale = Math.min(width, height) / 375;
 
-// Tính toán tỷ lệ scale dựa trên màn hình chuẩn (ví dụ: iPhone 8)
-const baseWidth = 375;
-const baseHeight = 667;
-
-const scaleWidth = width / baseWidth;
-const scaleHeight = height / baseHeight;
-const scale = Math.min(scaleWidth, scaleHeight);
-
-// Hàm để tính toán kích thước responsive
 const normalize = (size) => {
-  return Math.round(scale * size);
+  const newSize = size * scale;
+  if (width > 550) {
+    return Math.round(newSize * 0.8);
+  }
+  return Math.round(newSize);
 };
 
 const SignUpScreen = ({ navigation }) => {
@@ -34,52 +32,70 @@ const SignUpScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ImageBackground
-        source={require("../assets/images/bg-welcome.png")}
-        style={styles.background}
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView 
+        contentContainerStyle={styles.container}
+        bounces={false}
       >
-        <View style={styles.content}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Image source={require("../assets/icons/back-arrow.png")} style={styles.backIcon} />
+        <ImageBackground
+          source={require("../assets/images/bg-welcome.png")}
+          style={styles.background}
+          resizeMode="cover"
+        >
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Image 
+              source={require("../assets/icons/back-arrow.png")}
+              style={styles.backIcon}
+            />
           </TouchableOpacity>
 
-          <View style={styles.innerContainer}>
-            <Text style={styles.title}>Welcome Back!</Text>
-            
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#B1A99F"
-              value={email}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Number Phone"
-              placeholderTextColor="#B1A99F"
-              value={phone}
-              onChangeText={setPhone}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              placeholderTextColor="#B1A99F"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm Password"
-              placeholderTextColor="#B1A99F"
-              secureTextEntry
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
+          <View style={styles.content}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>Welcome</Text>
+              <Text style={styles.title}>Back!</Text>
+            </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('Home')} style={styles.button}>
-              <Text style={styles.buttonText}>Sign Up</Text>
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Email</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+
+              <Text style={styles.inputLabel}>Number Phone</Text>
+              <TextInput
+                style={styles.input}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+
+              <Text style={styles.inputLabel}>Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+
+              <Text style={styles.inputLabel}>Confirm Password</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
+              <Text style={styles.buttonText}>Sign up</Text>
             </TouchableOpacity>
 
             <View style={styles.signupContainer}>
@@ -89,87 +105,100 @@ const SignUpScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </ImageBackground>
-    </ScrollView>
+        </ImageBackground>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#EEDDC9',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+  },
   container: {
     flexGrow: 1,
-    minHeight: height,
   },
   background: {
     width: '100%',
     height: '100%',
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingVertical: normalize(40),
-    paddingHorizontal: normalize(20),
   },
   backButton: {
     position: 'absolute',
     top: normalize(30),
     left: normalize(20),
+    zIndex: 1,
   },
   backIcon: {
-    width: normalize(15),
-    height: normalize(15),
+    width: normalize(20),
+    height: normalize(20),
     tintColor: "#230C02",
   },
-  innerContainer: {
+  content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: normalize(20),
+  },
+  textContainer: {
+    alignItems: 'flex-start', 
     width: '100%',
+    marginBottom: normalize(20),
+    marginTop: normalize(280),
   },
   title: {
-    fontSize: normalize(30),
+    fontSize: normalize(32),
     fontWeight: "bold",
     color: "#230C02",
-    marginBottom: normalize(30),
+    lineHeight: normalize(40),
+  },
+  inputContainer: {
+    width: '100%',
+    alignItems: 'flex-start', 
+  },
+  inputLabel: {
+    color: '#230C02',
+    fontSize: normalize(15),
+    marginLeft: normalize(4),
+    fontWeight: "bold",
   },
   input: {
-    width: normalize(250),
-    backgroundColor: "#F5F5F5",
-    paddingVertical: normalize(12),
-    paddingHorizontal: normalize(15),
-    borderRadius: normalize(30),
-    marginVertical: normalize(10),
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#230C02',
+    
     fontSize: normalize(16),
+    color: '#230C02',
+    marginBottom: normalize(20),
   },
   button: {
-    width: normalize(250),
+    width: '100%',
     backgroundColor: "#3B2F2F",
     paddingVertical: normalize(15),
     borderRadius: normalize(30),
     alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: normalize(20),
+    marginBottom: normalize(30),
   },
   buttonText: {
     color: "#EEDDC9",
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: normalize(16),
-    textAlign: 'center',
   },
   signupContainer: {
     flexDirection: 'row',
-    marginTop: normalize(20),
+    justifyContent: 'center',
   },
   signupText: {
     color: "#230C02",
     fontSize: normalize(14),
+    fontWeight: "bold",
   },
   signupLink: {
-    color: "#3B2F2F",
+    color: "#834D1E",
     fontSize: normalize(14),
     fontWeight: "bold",
+    textDecorationLine: 'underline',
   },
 });
 
