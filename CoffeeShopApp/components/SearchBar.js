@@ -1,18 +1,24 @@
-import React, { useState } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity, Keyboard } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, StyleSheet, TouchableOpacity, Keyboard, } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
-export default function SearchBar({ placeholder = "Search for the drink...", onSearch }) {
+export default function SearchBar({ placeholder = "Search for the drink...", onSearch, forceBlur }) {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  useEffect(() => {
+    if (forceBlur) {
+      setIsFocused(false); // Mất focus
+    }
+  }, [forceBlur]);
+
   const handleSearch = () => {
     if (onSearch) {
-      console.log(`Searching for products related to: ${query}`); 
+      console.log(`Searching for products related to: ${query}`);
       onSearch(query);
       setQuery("");
-      Keyboard.dismiss(); // 👈 Bỏ focus khỏi TextInput
-      setIsFocused(false); // 👈 Cập nhật state để viền mất đi
+      Keyboard.dismiss();
+      setIsFocused(false);
     }
   };
 

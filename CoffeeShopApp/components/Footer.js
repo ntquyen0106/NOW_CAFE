@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, StyleSheet, Dimensions, Text, Animated } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Text,
+  Animated,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { setForceBlur } from "../redux/useSlice";
 
 const { width } = Dimensions.get("window");
 
@@ -17,7 +26,7 @@ export default function Footer() {
   const route = useRoute();
   const [selectedTab, setSelectedTab] = useState(route.name);
   const scaleAnim = useState(new Animated.Value(1))[0];
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setSelectedTab(route.name);
   }, [route.name]);
@@ -26,22 +35,35 @@ export default function Footer() {
     if (route.name !== tab.route) {
       setSelectedTab(tab.name);
       Animated.sequence([
-        Animated.timing(scaleAnim, { toValue: 1.2, duration: 150, useNativeDriver: true }),
-        Animated.timing(scaleAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
+        Animated.timing(scaleAnim, {
+          toValue: 1.2,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }),
       ]).start();
+      dispatch(setForceBlur(true));
       navigation.navigate(tab.route);
     }
   };
 
   return (
-    <View style={[styles.footer, { bottom: 0 }]}> 
+    <View style={[styles.footer, { bottom: 0 }]}>
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab.name}
           style={styles.tabButton}
           onPress={() => handlePress(tab)}
         >
-          <Animated.View style={{ transform: [{ scale: selectedTab === tab.route ? scaleAnim : 1 }] }}>
+          <Animated.View
+            style={{
+              transform: [{ scale: selectedTab === tab.route ? scaleAnim : 1 }],
+            }}
+          >
             <AntDesign
               name={tab.icon}
               size={30}

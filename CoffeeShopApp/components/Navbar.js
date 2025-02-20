@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet, Text, Image, Modal, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { setForceBlur } from "../redux/useSlice";
 
 const DEFAULT_AVATAR = "https://i.pravatar.cc/150"; // Ảnh avatar mặc định
 const { width } = Dimensions.get("window");
@@ -9,20 +11,21 @@ const { width } = Dimensions.get("window");
 export default function Navbar({ user }) {
   const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
+  const dispatch = useDispatch(); // Dùng Redux dispatch để cập nhật state
 
   return (
     <View style={styles.navbar}>
       <View style={styles.userInfo}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
             <Image source={{ uri: user.avatarUrl || DEFAULT_AVATAR }} style={styles.avatar} />
-        </TouchableOpacity>
+        </TouchableOpacity >
             <Text style={styles.greeting}>Good day, {user.name}!</Text>
       </View>
       <View style={styles.navIcons}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
           <Feather name="bell" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMenuVisible(true)}>
+        <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
           <Feather name="menu" size={24} color="black" />
         </TouchableOpacity>
       </View>
