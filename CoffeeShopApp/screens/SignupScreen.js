@@ -160,14 +160,15 @@ const styles = StyleSheet.create({
   inputLabel: {
     color: '#230C02',
     fontSize: normalize(15),
-    marginLeft: normalize(4),
+    marginBottom: normalize(8),
+    //marginLeft: normalize(4),
     fontWeight: "bold",
   },
   input: {
     width: '100%',
     borderBottomWidth: 1,
     borderBottomColor: '#230C02',
-    
+    outlineStyle: 'none',
     fontSize: normalize(16),
     color: '#230C02',
     marginBottom: normalize(20),
