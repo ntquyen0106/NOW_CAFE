@@ -69,11 +69,14 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+<<<<<<< HEAD
           <Stack.Screen
             name="ProductDetail"
             component={ProductDetailScreen}
             options={{ headerShown: false }}
           />
+=======
+>>>>>>> 70605ef8774316e4f9d388791df8382d4826b965
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

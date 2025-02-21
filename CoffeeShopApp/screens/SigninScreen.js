@@ -13,6 +13,7 @@ import {
   Platform,
   StatusBar
 } from "react-native";
+import { Feather } from "@expo/vector-icons"; // Import Feather icons
 
 const { width, height } = Dimensions.get("window");
 const scale = Math.min(width, height) / 375;
@@ -36,7 +37,7 @@ const OrDivider = () => {
 };
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -69,13 +70,13 @@ const SignInScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Email</Text>
+              <Text style={styles.inputLabel}>Username</Text>
               <TextInput
                 style={styles.input}
-                value={email}
-                onChangeText={setEmail}
+                value={username}
+                onChangeText={setUsername}
                 autoCapitalize="none"
-                keyboardType="email-address"
+                underlineColorAndroid="transparent" // Bỏ viền ô khi nhấp chuột vào
               />
 
               <Text style={styles.inputLabel}>Password</Text>
@@ -85,14 +86,17 @@ const SignInScreen = ({ navigation }) => {
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
+                  underlineColorAndroid="transparent" // Bỏ viền ô khi nhấp chuột vào
                 />
                 <TouchableOpacity 
                   style={styles.eyeButton} 
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Image 
-                    source={require("../assets/icons/eye-icon.png")}
-                    style={styles.eyeIcon}
+                  <Feather 
+                    name={showPassword ? "eye-off" : "eye"} 
+                    size={24} 
+                    color="#230C02" 
+                    style={styles.eyeIcon} 
                   />
                 </TouchableOpacity>
               </View>
@@ -192,7 +196,6 @@ const styles = StyleSheet.create({
     color: '#230C02',
     fontSize: normalize(15),
     marginBottom: normalize(8),
-    //marginLeft: normalize(4),
     fontWeight: "bold",
   },
   input: {
@@ -210,12 +213,12 @@ const styles = StyleSheet.create({
   },
   eyeButton: {
     position: 'absolute',
-    right: 0,
-    bottom: normalize(28),
+    right: normalize(0), 
+    bottom: normalize(25), 
   },
   eyeIcon: {
-    width: normalize(20),
-    height: normalize(20),
+    width: normalize(24), 
+    height: normalize(24), 
     tintColor: '#230C02',
   },
   forgotPasswordButton: {
