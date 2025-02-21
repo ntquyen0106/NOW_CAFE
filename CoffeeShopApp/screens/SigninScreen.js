@@ -86,7 +86,7 @@ const SignInScreen = ({ navigation }) => {
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
-                  underlineColorAndroid="transparent" // Bỏ viền ô khi nhấp chuột vào
+                  underlineColorAndroid="transparent" 
                 />
                 <TouchableOpacity 
                   style={styles.eyeButton} 

@@ -13,7 +13,11 @@ import SigninScreen from "./screens/SigninScreen.js";
 import SignupScreen from "./screens/SignupScreen.js";
 import ProfileScreen from "./screens/ProfileScreen.js";
 import ProductDetailScreen from "./screens/ProductDetailScreen.js";
-
+import SettingScreen from "./screens/SettingScreen.js";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen.js";
+import TermsScreen from "./screens/TermsScreen.js";
+import PolicyScreen from "./screens/PolicyScreen.js";
+import QuestionScreen from "./screens/QuestionScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -80,6 +84,36 @@ export default function App() {
           <Stack.Screen
             name="ProductDetail"
             component={ProductDetailScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Setting"
+            component={SettingScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Terms"
+            component={TermsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Policy"
+            component={PolicyScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Question"
+            component={QuestionScreen}
             options={{ headerShown: false }}
           />
 

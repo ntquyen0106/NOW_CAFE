@@ -40,45 +40,45 @@ export default function AccountScreen({ navigation }) {
           <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Profile')}>
             <Image source={require("../assets/icons/profile.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Hồ Sơ</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Settings')}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Setting')}>
             <Image source={require("../assets/icons/setting.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Cài Đặt</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Thông Tin Chung</Text>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Terms')}>
             <Image source={require("../assets/icons/clause.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Điều khoản dịch vụ</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Policy')}>
             <Image source={require("../assets/icons/clause.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Chính sách bảo mật</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
             <Image source={require("../assets/icons/introduce.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Giới Thiệu Về Phiên Bản Ứng Dụng</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Trung Tâm Trợ Giúp</Text>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Question')}>
             <Image source={require("../assets/icons/question.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Câu hỏi thường gặp</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
             <Image source={require("../assets/icons/respone.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Phản hồi & Hỗ trợ</Text>
-            <Feather name="arrow-right" size={20} color="#666" />
+            <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
         </View>
 

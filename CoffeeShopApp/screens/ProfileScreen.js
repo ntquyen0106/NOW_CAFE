@@ -11,9 +11,8 @@ import {
   Picker,
   Platform,
 } from "react-native";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import { Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons"; // Import Feather icons
+import Footer from "../components/Footer"; // Footer đã có sẵn trong dự án của bạn
 
 const { width, height } = Dimensions.get("window");
 
@@ -24,120 +23,131 @@ export default function ProfileScreen({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   return (
-    <View style={styles.mainContainer}>
-      <Navbar user={{ name: "Selenay", avatarUrl: "https://i.pravatar.cc/150" }} />
+    <View style={styles.outerContainer}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Feather name="arrow-left" size={24} color="#230C02" />
+      </TouchableOpacity>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.profileSection}>
-          <Text style={styles.memberStatus}>THÀNH VIÊN</Text>
-          <View style={styles.balanceContainer}>
-            <View style={styles.balanceItem}>
-              <Image source={require("../assets/icons/drips.png")} style={styles.icon} />
-              <Text style={styles.balanceText}>DRIPS: 0</Text>
-            </View>
-            <View style={styles.balanceItem}>
-              <Image source={require("../assets/icons/prepay.png")} style={styles.icon} />
-              <Text style={styles.balanceText}>Trả trước: 0đ</Text>
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+          <View style={styles.profileSection}>
+            <Text style={styles.memberStatus}>THÀNH VIÊN</Text>
+            <View style={styles.balanceContainer}>
+              <View style={styles.balanceItem}>
+                <Image source={require("../assets/icons/drips.png")} style={styles.icon} />
+                <Text style={styles.balanceText}>DRIPS: 0</Text>
+              </View>
+              <View style={styles.balanceItem}>
+                <Image source={require("../assets/icons/prepay.png")} style={styles.icon} />
+                <Text style={styles.balanceText}>Trả trước: 0đ</Text>
+              </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.formSection}>
-          <View style={styles.formHeader}>
-            <Text style={styles.formTitle}>Thông Tin Chung</Text>
-            <TouchableOpacity>
-              <Text style={styles.editLink}>Sửa</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.formGroup}>
-            <View style={styles.inputRow}>
-              <TextInput
-                style={[styles.input, styles.halfInput]}
-                placeholder="Tên"
-                placeholderTextColor="#999"
-              />
-              <TextInput
-                style={[styles.input, styles.halfInput]}
-                placeholder="Họ"
-                placeholderTextColor="#999"
-              />
+          <View style={styles.formSection}>
+            <View style={styles.formHeader}>
+              <Text style={styles.formTitle}>Thông Tin Chung</Text>
+              <TouchableOpacity>
+                <Text style={styles.editLink}>Sửa</Text>
+              </TouchableOpacity>
             </View>
 
-            <View style={styles.inputRow}>
-              <Picker
-                selectedValue={gender}
-                style={[styles.input, styles.halfInput, styles.genderPicker]}
-                onValueChange={(itemValue) => setGender(itemValue)}
-              >
-                <Picker.Item label="Chọn Giới Tính" value="" />
-                <Picker.Item label="Nam" value="male" />
-                <Picker.Item label="Nữ" value="female" />
-                <Picker.Item label="Khác" value="other" />
-              </Picker>
-              <TextInput
-                style={[styles.input, styles.halfInput]}
-                placeholder="Năm Sinh"
-                placeholderTextColor="#999"
-                keyboardType="numeric"
-                value={birthYear}
-                onChangeText={setBirthYear}
-              />
-            </View>
+            <View style={styles.formGroup}>
+              <View style={styles.inputRow}>
+                <TextInput
+                  style={[styles.input, styles.halfInput]}
+                  placeholder="Tên"
+                  placeholderTextColor="#999"
+                />
+                <TextInput
+                  style={[styles.input, styles.halfInput]}
+                  placeholder="Họ"
+                  placeholderTextColor="#999"
+                />
+              </View>
 
-            <View style={styles.phoneSection}>
-              <Text style={styles.inputLabel}>Số Điện Thoại</Text>
-              <View style={styles.phoneRow}>
+              <View style={styles.inputRow}>
                 <Picker
-                  selectedValue={phoneArea}
-                  style={[styles.input, styles.phoneAreaPicker]}
-                  onValueChange={(itemValue) => setPhoneArea(itemValue)}
+                  selectedValue={gender}
+                  style={[styles.input, styles.halfInput, styles.genderPicker]}
+                  onValueChange={(itemValue) => setGender(itemValue)}
                 >
-                  <Picker.Item label="+84" value="+84" />
-                  <Picker.Item label="+1" value="+1" />
-                  <Picker.Item label="+44" value="+44" />
+                  <Picker.Item label="Chọn Giới Tính" value="" />
+                  <Picker.Item label="Nam" value="male" />
+                  <Picker.Item label="Nữ" value="female" />
+                  <Picker.Item label="Khác" value="other" />
                 </Picker>
                 <TextInput
-                  style={[styles.input, styles.phoneInput]}
-                  placeholder="Số Điện Thoại"
+                  style={[styles.input, styles.halfInput]}
+                  placeholder="Năm Sinh"
                   placeholderTextColor="#999"
-                  keyboardType="phone-pad"
-                  value={phoneNumber}
-                  onChangeText={setPhoneNumber}
+                  keyboardType="numeric"
+                  value={birthYear}
+                  onChangeText={setBirthYear}
+                />
+              </View>
+
+              <View style={styles.phoneSection}>
+                <Text style={styles.inputLabel}>Số Điện Thoại</Text>
+                <View style={styles.phoneRow}>
+                  <Picker
+                    selectedValue={phoneArea}
+                    style={[styles.input, styles.phoneAreaPicker]}
+                    onValueChange={(itemValue) => setPhoneArea(itemValue)}
+                  >
+                    <Picker.Item label="+84" value="+84" />
+                    <Picker.Item label="+1" value="+1" />
+                    <Picker.Item label="+44" value="+44" />
+                  </Picker>
+                  <TextInput
+                    style={[styles.input, styles.phoneInput]}
+                    placeholder="Số Điện Thoại"
+                    placeholderTextColor="#999"
+                    keyboardType="phone-pad"
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.emailSection}>
+                <Text style={styles.inputLabel}>Email</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="#999"
                 />
               </View>
             </View>
 
-            <View style={styles.emailSection}>
-              <Text style={styles.inputLabel}>Email</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#999"
-              />
-            </View>
+            <TouchableOpacity style={styles.verifyButton}>
+              <Text style={styles.verifyText}>Xác Nhận</Text>
+            </TouchableOpacity>
           </View>
+        </ScrollView>
 
-          <TouchableOpacity style={styles.verifyButton}>
-            <Text style={styles.verifyText}>Xác Nhận</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <Footer />
+        <Footer />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  outerContainer: {
     flex: 1,
     backgroundColor: "#F9F6F0",
+  },
+  backButton: {
+    top: 20,
+    left: 15,
+    zIndex: 1,
+  },
+  mainContainer: {
+    flex: 1,
   },
   container: {
     flex: 1,
     paddingHorizontal: 12,
-    marginTop: 80,
   },
   scrollContent: {
     paddingBottom: 10,
@@ -206,7 +216,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#F9F6F0',
-    padding: 13, 
+    padding: 13,
     borderRadius: 8,
     fontSize: 16,
     width: '100%',
@@ -235,11 +245,11 @@ const styles = StyleSheet.create({
   },
   phoneAreaPicker: {
     flex: 0.3,
-    height: 50, 
+    height: 50,
   },
   phoneInput: {
     flex: 1,
-    padding: 13, 
+    padding: 13,
   },
   verifyButton: {
     backgroundColor: '#D83C3D',
