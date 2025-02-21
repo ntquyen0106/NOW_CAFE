@@ -11,7 +11,11 @@ import WelcomeScreen from "./screens/WelcomeScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
 import SigninScreen from "./screens/SigninScreen.js";
 import SignupScreen from "./screens/SignupScreen.js";
+
 import ProfileScreen from "./screens/ProfileScreen.js";
+
+import ProductDetailScreen from "./screens/ProductDetailScreen.js";
+
 
 const Stack = createStackNavigator();
 
@@ -19,7 +23,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Profile">
+        <Stack.Navigator initialRouteName="Welcome">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
@@ -71,6 +75,13 @@ export default function App() {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
+            options={{ headerShown: false }}
+          />
+
+
+          <Stack.Screen
+            name="ProductDetail"
+            component={ProductDetailScreen}
             options={{ headerShown: false }}
           />
 

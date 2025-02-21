@@ -3,11 +3,16 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { setForceBlur } from "../redux/useSlice";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProductCard({ product }) {
   const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+
   return (
+    <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", { product })}>
     <View style={styles.card}>
       <Image source={{ uri: product.image }} style={styles.image} />
       <View style={styles.info}>
@@ -31,6 +36,7 @@ export default function ProductCard({ product }) {
         </View>
       </View>
     </View>
+  </TouchableOpacity>
   );
 }
 
