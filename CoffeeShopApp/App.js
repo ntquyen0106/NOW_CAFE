@@ -6,11 +6,12 @@ import store from "./redux/store";
 import HomeScreen from "./screens/HomeScreen.js";
 import CartScreen from "./screens/CartScreen.js";
 import FavoritesScreen from "./screens/FavoritesScreen.js";
-import ProfileScreen from "./screens/ProfileScreen.js";
+import OptionScreen from "./screens/OptionScreen.js";
 import WelcomeScreen from "./screens/WelcomeScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
 import SigninScreen from "./screens/SigninScreen.js";
 import SignupScreen from "./screens/SignupScreen.js";
+import ProfileScreen from "./screens/ProfileScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -18,7 +19,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Navigator initialRouteName="Profile">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
@@ -44,8 +45,8 @@ export default function App() {
           />
 
           <Stack.Screen
-            name="Profile"
-            component={ProfileScreen}
+            name="Option"
+            component={OptionScreen}
             options={{ headerShown: false }}
           />
 
@@ -64,6 +65,12 @@ export default function App() {
           <Stack.Screen
             name="Signup"
             component={SignupScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
             options={{ headerShown: false }}
           />
 
