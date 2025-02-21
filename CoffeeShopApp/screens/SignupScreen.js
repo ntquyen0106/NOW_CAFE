@@ -97,7 +97,7 @@ const SignUpScreen = ({ navigation }) => {
                   onPress={() => setShowPassword(!showPassword)}
                 >
                   <Feather 
-                    name={showPassword ? "eye-off" : "eye"} 
+                    name={showPassword ? "eye" : "eye-off"} 
                     size={24} 
                     color="#230C02" 
                     style={styles.eyeIcon} 
@@ -118,7 +118,7 @@ const SignUpScreen = ({ navigation }) => {
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   <Feather 
-                    name={showConfirmPassword ? "eye-off" : "eye"} 
+                    name={showConfirmPassword ? "eye" : "eye-off"} 
                     size={24} 
                     color="#230C02" 
                     style={styles.eyeIcon} 

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ScrollView, 
-  Dimensions, 
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
   Image,
   TextInput,
   Picker,
@@ -67,7 +67,7 @@ export default function ProfileScreen({ navigation }) {
             <View style={styles.inputRow}>
               <Picker
                 selectedValue={gender}
-                style={[styles.input, styles.halfInput, styles.genderPicker]} // Decrease height of the gender picker
+                style={[styles.input, styles.halfInput, styles.genderPicker]}
                 onValueChange={(itemValue) => setGender(itemValue)}
               >
                 <Picker.Item label="Chọn Giới Tính" value="" />
@@ -90,7 +90,7 @@ export default function ProfileScreen({ navigation }) {
               <View style={styles.phoneRow}>
                 <Picker
                   selectedValue={phoneArea}
-                  style={[styles.input, { flex: 0.3 }]}
+                  style={[styles.input, styles.phoneAreaPicker]}
                   onValueChange={(itemValue) => setPhoneArea(itemValue)}
                 >
                   <Picker.Item label="+84" value="+84" />
@@ -123,7 +123,7 @@ export default function ProfileScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      
+
       <Footer />
     </View>
   );
@@ -144,16 +144,16 @@ const styles = StyleSheet.create({
   },
   profileSection: {
     backgroundColor: '#fff',
-    padding: 12,
+    padding: 20,
     borderRadius: 8,
     marginTop: 30,
-    marginBottom: 12,
+    marginBottom: 20,
     alignItems: 'flex-start',
   },
   memberStatus: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   balanceContainer: {
     marginTop: 5,
@@ -164,93 +164,95 @@ const styles = StyleSheet.create({
   balanceItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 12,
   },
   balanceText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
-    marginLeft: 8,
+    marginLeft: 10,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
   formSection: {
     backgroundColor: '#fff',
     borderRadius: 8,
-    marginTop: 12,
-    padding: 15,
+    marginTop: 5,
+    padding: 20,
   },
   formHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   formTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: '#333',
   },
   editLink: {
     color: '#D83C3D',
-    fontSize: 14,
+    fontSize: 16,
   },
   formGroup: {
-    gap: 15,
+    gap: 20,
   },
   inputRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 15,
+    gap: 15,
+    marginBottom: 10,
   },
   input: {
     backgroundColor: '#F9F6F0',
-    padding: 12,
+    padding: 13, 
     borderRadius: 8,
-    fontSize: 14,
-    width: '90%',
+    fontSize: 16,
+    width: '100%',
   },
   halfInput: {
     flex: 1,
   },
   genderPicker: {
-    height: 45, // Decrease height of the gender picker
-    
-  },
-  datePickerButton: {
-    height: 45, // Increase the size of date picker button
+    height: 50, 
+    paddingLeft: 10,
   },
   phoneSection: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   emailSection: {
-    marginBottom: 15,
+    marginBottom: 20,
   },
   inputLabel: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   phoneRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 15,
+  },
+  phoneAreaPicker: {
+    flex: 0.3,
+    height: 50, 
   },
   phoneInput: {
     flex: 1,
+    padding: 13, 
   },
   verifyButton: {
     backgroundColor: '#D83C3D',
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 5,
   },
   verifyText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
   },
 });

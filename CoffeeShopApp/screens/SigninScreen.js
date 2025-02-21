@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ScrollView, 
-  Dimensions, 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
   Image,
   ImageBackground,
   SafeAreaView,
@@ -93,7 +93,7 @@ const SignInScreen = ({ navigation }) => {
                   onPress={() => setShowPassword(!showPassword)}
                 >
                   <Feather 
-                    name={showPassword ? "eye-off" : "eye"} 
+                    name={showPassword ? "eye" : "eye-off"} 
                     size={24} 
                     color="#230C02" 
                     style={styles.eyeIcon} 

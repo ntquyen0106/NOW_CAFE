@@ -11,9 +11,7 @@ import WelcomeScreen from "./screens/WelcomeScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
 import SigninScreen from "./screens/SigninScreen.js";
 import SignupScreen from "./screens/SignupScreen.js";
-
 import ProfileScreen from "./screens/ProfileScreen.js";
-
 import ProductDetailScreen from "./screens/ProductDetailScreen.js";
 
 
