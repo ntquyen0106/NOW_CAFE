@@ -50,7 +50,7 @@ export default function ProductDetail() {
             <View style={styles.headerRow}>
               <Text style={styles.productTitle}>{product.category} - {product.name}</Text>
               <TouchableOpacity onPress={() => setLiked(!liked)}>
-                <FontAwesome name={liked ? "heart" : "heart-o"} size={24} color="red" />
+                <FontAwesome name={liked ? "heart" : "heart-o"} size={24} color="#e5b788" />
               </TouchableOpacity>
             </View>
             <Text style={styles.description}>{product.description}</Text>
@@ -100,9 +100,17 @@ export default function ProductDetail() {
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.headerRow}><Text style={styles.reviewHeader}>Đánh giá khách hàng ({reviews.length})</Text>
+          <TouchableOpacity onPress={() => setShowAllReviews(!showAllReviews)}>
+            <Text style={{ color: "#E5B788", textAlign: 'right', fontSize: 16 }}>
+              {showAllReviews ? "Ẩn" : "Hiện thêm"}
+            </Text>
+          </TouchableOpacity>
+          </View>
+          <ScrollView   contentContainerStyle={styles.scrollContainer} nestedScrollEnabled={true}
+  keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}> 
             <View style={styles.reviewHeaderContainer}>
-            <Text style={styles.reviewHeader}>User Reviews ({reviews.length})</Text>
+            
             {visibleReviews.map((user, index) => (
               <View key={index} style={styles.reviewCard}>
                 <View style={styles.reviewUserRow}>
@@ -127,7 +135,7 @@ export default function ProductDetail() {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F5EBDC" },
+  container: {  flex: 1, minHeight: '100%',backgroundColor: "#F5EBDC" },
   productImage: { width: "100%", height: 280, resizeMode: "cover" },
   contentContainer: { backgroundColor: "#3B2211", paddingHorizontal: 16, paddingTop: 16, borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingVertical: 20, borderBottomColor: "#E5B788", borderBottomWidth: 2, },
   productCard: { paddingBottom: 16 },
@@ -137,7 +145,8 @@ const styles = StyleSheet.create({
   infoRow: { flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10 },
   price: { fontSize: 20, fontWeight: "bold", color: "white",  },
   sold: { fontSize: 20, color: "#fff", fontWeight: "bold" },
-  sizeContainer: { flexDirection: "row", justifyContent: "space-around", marginVertical: 10 },
+  sizeContainer: { flexDirection: "row", justifyContent: "space-around", marginVertical: 10, color: "#fff" },
+  label: { fontSize: 16, color: "#fff", fontWeight: "bold", marginTop: 10 },
   sizeButton: { flexDirection: "row", borderWidth: 2,
     borderColor: "#E5B788",
     borderRadius: 30,
@@ -148,7 +157,7 @@ const styles = StyleSheet.create({
   selectedSize: { backgroundColor: "#E5B788" },
   sizeText: { color: "white" },
   noteInput: { backgroundColor: "#FFF", padding: 10, borderRadius: 5, marginVertical: 10,marginHorizontal: 10 },
-  cartContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 10, marginHorizontal: 10 },
+  cartContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 5, marginHorizontal: 10 },
   quantityContainer: { flexDirection: "row",
     alignItems: "center",
     borderWidth: 2,
@@ -170,15 +179,24 @@ const styles = StyleSheet.create({
   scrollContainer: {
     paddingVertical: 10,
     paddingHorizontal: 5,
-    
+    flexGrow: 1,
+    minHeight: '100%',
+    paddingBottom: 200,
   },
   reviewHeaderContainer: {
     marginBottom: 10,
+    
   },
   reviewHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
+   
+  },
+  headerRow: {  
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   reviewCard: {
@@ -191,6 +209,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     marginBottom: 10,
+    
     
   },
   reviewUserRow: {
