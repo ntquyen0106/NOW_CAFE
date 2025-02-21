@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   View, 
   Text, 
@@ -15,6 +15,12 @@ import { Feather } from "@expo/vector-icons";
 const { width, height } = Dimensions.get("window");
 
 export default function AccountScreen({ navigation }) {
+  const [isVersionVisible, setIsVersionVisible] = useState(false);
+
+  const toggleVersionVisibility = () => {
+    setIsVersionVisible(!isVersionVisible);
+  };
+
   return (
     <View style={styles.mainContainer}>
       <Navbar user={{ name: "Selenay", avatarUrl: "https://i.pravatar.cc/150" }} />
@@ -61,11 +67,16 @@ export default function AccountScreen({ navigation }) {
             <Text style={styles.menuItemText}>Chính sách bảo mật</Text>
             <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={toggleVersionVisibility}>
             <Image source={require("../assets/icons/introduce.png")} style={styles.menuItemIcon} />
-            <Text style={styles.menuItemText}>Giới Thiệu Về Phiên Bản Ứng Dụng</Text>
-            <Feather name="chevron-right" size={20} color="#666" />
+            <Text style={styles.menuItemText}>Phiên Bản Ứng Dụng</Text>
+            <Feather name={isVersionVisible ? "chevron-up" : "chevron-right"} size={20} color="#666" />
           </TouchableOpacity>
+          {isVersionVisible && (
+            <View style={styles.versionContainer}>
+              <Text style={styles.versionText}>Phiên bản hiện tại: 1.0.0</Text>
+            </View>
+          )}
         </View>
 
         <View style={styles.section}>
@@ -75,7 +86,7 @@ export default function AccountScreen({ navigation }) {
             <Text style={styles.menuItemText}>Câu hỏi thường gặp</Text>
             <Feather name="chevron-right" size={20} color="#666" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Contact')}>
             <Image source={require("../assets/icons/respone.png")} style={styles.menuItemIcon} />
             <Text style={styles.menuItemText}>Phản hồi & Hỗ trợ</Text>
             <Feather name="chevron-right" size={20} color="#666" />
@@ -103,7 +114,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 12,
-    marginTop: 100, // Increased from 60 to avoid Navbar overlap
+    marginTop: 100, 
   },
   scrollContent: {
     paddingBottom: 10,
@@ -167,6 +178,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#333',
     fontWeight: 'bold',
+  },
+  versionContainer: {
+    padding: 12,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginTop: -6,
+    marginBottom: 6,
+  },
+  versionText: {
+    fontSize: 15,
+    color: '#333',
+    paddingLeft: 33,
   },
   logoutButton: {
     backgroundColor: '#D83C3D',

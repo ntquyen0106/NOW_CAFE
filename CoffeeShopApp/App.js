@@ -18,6 +18,7 @@ import ChangePasswordScreen from "./screens/ChangePasswordScreen.js";
 import TermsScreen from "./screens/TermsScreen.js";
 import PolicyScreen from "./screens/PolicyScreen.js";
 import QuestionScreen from "./screens/QuestionScreen.js";
+import ContactScreen from "./screens/ContactScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -114,6 +115,12 @@ export default function App() {
             name="Question"
             component={QuestionScreen}
             options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Contact"
+            component={ContactScreen}
+            options={{ headerShown: false }}  
           />
 
         </Stack.Navigator>
