@@ -25,7 +25,7 @@ export default function Navbar({ user }) {
         <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
           <Feather name="bell" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
+        <TouchableOpacity onPress={() => {dispatch(setForceBlur(true)), setMenuVisible(true)}}>
           <Feather name="menu" size={24} color="black" />
         </TouchableOpacity>
       </View>

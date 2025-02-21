@@ -80,7 +80,6 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
-
           <Stack.Screen
             name="ProductDetail"
             component={ProductDetailScreen}
