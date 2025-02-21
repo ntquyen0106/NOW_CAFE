@@ -13,6 +13,7 @@ import {
   Platform,
   StatusBar
 } from "react-native";
+import { Feather } from "@expo/vector-icons"; // Import Feather icons
 
 const { width, height } = Dimensions.get("window");
 const scale = Math.min(width, height) / 375;
@@ -26,10 +27,13 @@ const normalize = (size) => {
 };
 
 const SignUpScreen = ({ navigation }) => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -54,12 +58,15 @@ const SignUpScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <View style={styles.content}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>Welcome</Text>
-              <Text style={styles.title}>Back!</Text>
-            </View>
-
             <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Username</Text>
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+              />
+
               <Text style={styles.inputLabel}>Email</Text>
               <TextInput
                 style={styles.input}
@@ -78,20 +85,46 @@ const SignUpScreen = ({ navigation }) => {
               />
 
               <Text style={styles.inputLabel}>Password</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={!showPassword}
+                  value={password}
+                  onChangeText={setPassword}
+                />
+                <TouchableOpacity 
+                  style={styles.eyeButton} 
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <Feather 
+                    name={showPassword ? "eye-off" : "eye"} 
+                    size={24} 
+                    color="#230C02" 
+                    style={styles.eyeIcon} 
+                  />
+                </TouchableOpacity>
+              </View>
 
               <Text style={styles.inputLabel}>Confirm Password</Text>
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  secureTextEntry={!showConfirmPassword}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                />
+                <TouchableOpacity 
+                  style={styles.eyeButton} 
+                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <Feather 
+                    name={showConfirmPassword ? "eye-off" : "eye"} 
+                    size={24} 
+                    color="#230C02" 
+                    style={styles.eyeIcon} 
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
 
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Home')}>
@@ -140,6 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: normalize(20),
+    marginTop: normalize(280),
   },
   textContainer: {
     alignItems: 'flex-start', 
@@ -161,7 +195,6 @@ const styles = StyleSheet.create({
     color: '#230C02',
     fontSize: normalize(15),
     marginBottom: normalize(8),
-    //marginLeft: normalize(4),
     fontWeight: "bold",
   },
   input: {
@@ -172,6 +205,20 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     color: '#230C02',
     marginBottom: normalize(20),
+  },
+  passwordContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: normalize(0), 
+    bottom: normalize(20), 
+  },
+  eyeIcon: {
+    width: normalize(24), 
+    height: normalize(24), 
+    tintColor: '#230C02',
   },
   button: {
     width: '100%',
