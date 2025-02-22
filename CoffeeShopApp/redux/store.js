@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import useReducer from "./useSlice"; // Import reducer từ useSlice.js
+import useReducer from "./useSlice"; 
+import favoritesReducer from "./favoritesSlice"; 
 
 const store = configureStore({
   reducer: {
-    focus: useReducer, // Đăng ký reducer vào store
+    focus: useReducer, 
+    favorites: favoritesReducer, 
   },
 });
 

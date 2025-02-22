@@ -16,13 +16,10 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "supportsTablet": true
     }
   }
 }
