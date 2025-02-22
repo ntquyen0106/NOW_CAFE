@@ -4,19 +4,24 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../redux/favoritesSlice";
 import { useNavigation } from "@react-navigation/native";
+import useAddToCart from "../hooks/useAddToCart";
 
 export default function ProductCard({ product }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const favorites = useSelector((state) => state.favorites);
-  const isFavorite = favorites.some(item => item.sanpham_id === product.sanpham_id);
-
+  const isFavorite = favorites.some(
+    (item) => item.sanpham_id === product.sanpham_id
+  );
+  const addToCart = useAddToCart(product);
   const handleToggleFavorite = () => {
     dispatch(toggleFavorite(product));
   };
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", { product })}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ProductDetail", { product })}
+    >
       <View style={styles.card}>
         <Image source={{ uri: product.image }} style={styles.image} />
         <View style={styles.info}>
@@ -24,18 +29,29 @@ export default function ProductCard({ product }) {
           <Text style={styles.name}>{product.name}</Text>
           <Text style={styles.description}>{product.description}</Text>
           <View style={styles.priceRow}>
-            <Text style={styles.oldPrice}>${(product.price * 1.2).toFixed(2)}</Text>
+            <Text style={styles.oldPrice}>
+              ${(product.price * 1.2).toFixed(2)}
+            </Text>
             <Text style={styles.newPrice}>${product.price.toFixed(2)}</Text>
           </View>
           <View style={styles.actions}>
             <TouchableOpacity style={styles.buyButton}>
               <Text style={styles.buyText}>Buy now!</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                dispatch(setForceBlur(true));
+                addToCart();
+              }}
+            >
               <AntDesign name="shoppingcart" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleToggleFavorite}>
-              <AntDesign name={isFavorite ? "heart" : "hearto"} size={24} color={isFavorite ? "#D7263D" : "black"} />
+              <AntDesign
+                name={isFavorite ? "heart" : "hearto"}
+                size={24}
+                color={isFavorite ? "#D7263D" : "black"}
+              />
             </TouchableOpacity>
           </View>
         </View>
