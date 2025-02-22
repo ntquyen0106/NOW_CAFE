@@ -4,12 +4,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { setForceBlur } from "../redux/useSlice";
 import { useNavigation } from "@react-navigation/native";
+import useAddToCart from "../hooks/useAddToCart";
 
 export default function ProductCard({ product }) {
   const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const addToCart = useAddToCart(product);
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", { product })}>
@@ -27,7 +28,7 @@ export default function ProductCard({ product }) {
           <TouchableOpacity style={styles.buyButton} onPress={() => dispatch(setForceBlur(true))}>
             <Text style={styles.buyText}>Buy now!</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
+          <TouchableOpacity onPress={() => {dispatch(setForceBlur(true)); addToCart()}}>
             <AntDesign name="shoppingcart" size={24} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() =>{ setLiked(!liked); dispatch(setForceBlur(true)); }}>

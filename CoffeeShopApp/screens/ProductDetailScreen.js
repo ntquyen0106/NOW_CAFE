@@ -4,13 +4,15 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
+import useAddToCart from "../hooks/useAddToCart";
+
 
 const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
   const route = useRoute();
   const product = route.params.product;
-
+  const addToCart = useAddToCart(product); // 📌 Gọi hook
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("350 ml");
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -39,6 +41,7 @@ export default function ProductDetail() {
       ))}
     </View>
   );
+   
 
   return (
     <View style={styles.container}>
@@ -95,7 +98,7 @@ export default function ProductDetail() {
                   <FontAwesome name="plus" size={9} color="#FFF" />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={styles.addToCartButton}>
+              <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart()}>
                 <Text style={styles.addToCartText}>Add to Cart</Text>
               </TouchableOpacity>
             </View>
