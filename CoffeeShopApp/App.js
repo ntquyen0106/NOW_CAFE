@@ -29,7 +29,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Voucher">
+        <Stack.Navigator initialRouteName="Welcome">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
