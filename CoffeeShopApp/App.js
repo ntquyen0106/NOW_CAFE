@@ -19,6 +19,9 @@ import TermsScreen from "./screens/TermsScreen.js";
 import PolicyScreen from "./screens/PolicyScreen.js";
 import QuestionScreen from "./screens/QuestionScreen.js";
 import ContactScreen from "./screens/ContactScreen.js";
+import DeliveryScreen from "./screens/DeliveryScreen.js";
+import AddLocationScreen from "./screens/AddLocationScreen.js";
+import VoucherScreen from "./screens/VoucherScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -26,7 +29,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Navigator initialRouteName="Voucher">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
@@ -121,6 +124,24 @@ export default function App() {
             name="Contact"
             component={ContactScreen}
             options={{ headerShown: false }}  
+          />
+
+          <Stack.Screen
+            name="Delivery"
+            component={DeliveryScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="AddLocation"
+            component={AddLocationScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Voucher"
+            component={VoucherScreen}
+            options={{ headerShown: false }}
           />
 
         </Stack.Navigator>
