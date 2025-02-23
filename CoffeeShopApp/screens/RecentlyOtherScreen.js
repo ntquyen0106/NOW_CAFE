@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const bill = {
   hoadon_id: "HD0001",
@@ -105,6 +106,7 @@ const RecentlyOtherScreen = () => {
         <Item bill={bill} status={'Completed'} />
         }
       </View>
+        <Footer/>
     </View>
   );
 };
