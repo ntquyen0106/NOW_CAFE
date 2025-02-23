@@ -23,6 +23,7 @@ import DeliveryScreen from "./screens/DeliveryScreen.js";
 import AddLocationScreen from "./screens/AddLocationScreen.js";
 import VoucherScreen from "./screens/VoucherScreen.js";
 import RecentlyOrderScreen from "./screens/RecentlyOtherScreen.js";
+import OrderDetailScreens from "./screens/OderDetailScreen.js";
 
 const Stack = createStackNavigator();
 
@@ -30,7 +31,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="RecentlyOrder">
+        <Stack.Navigator initialRouteName="OrderDetail">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
@@ -148,6 +149,12 @@ export default function App() {
           <Stack.Screen
             name="RecentlyOrder"
             component={RecentlyOrderScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="OrderDetail"
+            component={OrderDetailScreens}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
