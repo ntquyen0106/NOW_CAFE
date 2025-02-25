@@ -23,6 +23,7 @@ import DeliveryScreen from "./screens/DeliveryScreen.js";
 import AddLocationScreen from "./screens/AddLocationScreen.js";
 import VoucherScreen from "./screens/VoucherScreen.js";
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -144,6 +145,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+          
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
