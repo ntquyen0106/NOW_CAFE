@@ -1,42 +1,64 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Keyboard } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useDispatch } from "react-redux";
-import { setForceBlur } from "../redux/useSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../redux/favoritesSlice";
 import { useNavigation } from "@react-navigation/native";
+import useAddToCart from "../hooks/useAddToCart";
+import { setForceBlur } from "../redux/useSlice";
 
 export default function ProductCard({ product }) {
-  const [liked, setLiked] = useState(false);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const favorites = useSelector((state) => state.favorites);
+  const isFavorite = favorites.some(
+    (item) => item.sanpham_id === product.sanpham_id
+  );
+  const addToCart = useAddToCart(product);
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavorite(product));
+  };
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("ProductDetail", { product })}>
-    <View style={styles.card}>
-      <Image source={{ uri: product.image }} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.category}>{product.category}</Text>
-        <Text style={styles.name}>{product.name}</Text>
-        <Text style={styles.description}>{product.description}</Text>
-        <View style={styles.priceRow}>
-          <Text style={styles.oldPrice}>${(product.price * 1.2).toFixed(2)}</Text>
-          <Text style={styles.newPrice}>${product.price.toFixed(2)}</Text>
-        </View>
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.buyButton} onPress={() => dispatch(setForceBlur(true))}>
-            <Text style={styles.buyText}>Buy now!</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
-            <AntDesign name="shoppingcart" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() =>{ setLiked(!liked); dispatch(setForceBlur(true)); }}>
-            <AntDesign name={liked ? "heart" : "hearto"} size={24} color={liked ? "#D7263D" : "black"} />
-          </TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("ProductDetail", { product })}
+    >
+      <View style={styles.card}>
+        <Image source={{ uri: product.image }} style={styles.image} />
+        <View style={styles.info}>
+          <Text style={styles.category}>{product.category}</Text>
+          <Text style={styles.name}>{product.name}</Text>
+          <Text style={styles.description}>{product.description}</Text>
+          <View style={styles.priceRow}>
+            <Text style={styles.oldPrice}>
+              ${(product.price * 1.2).toFixed(2)}
+            </Text>
+            <Text style={styles.newPrice}>${product.price.toFixed(2)}</Text>
+          </View>
+          <View style={styles.actions}>
+            <TouchableOpacity style={styles.buyButton}>
+              <Text style={styles.buyText}>Buy now!</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                Keyboard.dismiss(); 
+                dispatch(setForceBlur(true));
+                addToCart();
+              }}
+            >
+              <AntDesign name="shoppingcart" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleToggleFavorite}>
+              <AntDesign
+                name={isFavorite ? "heart" : "hearto"}
+                size={24}
+                color={isFavorite ? "#D7263D" : "black"}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
   );
 }
 
@@ -48,7 +70,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     alignItems: "center",
- 
   },
   image: {
     width: 120,
