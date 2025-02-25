@@ -33,7 +33,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="ReviewDetail">
+        <Stack.Navigator initialRouteName="Cart">
           <Stack.Screen
             name="Welcome"
             component={WelcomeScreen}
