@@ -15,7 +15,7 @@ export default function SearchBar({ placeholder = "Search for the drink...", onS
   const handleSearch = () => {
     if (onSearch) {
       console.log(`Searching for products related to: ${query}`);
-      onSearch(query);
+      onSearch(query.trim());
       setQuery("");
       Keyboard.dismiss();
       setIsFocused(false);
@@ -29,7 +29,10 @@ export default function SearchBar({ placeholder = "Search for the drink...", onS
         placeholder={placeholder}
         placeholderTextColor="#A0A0A0"
         value={query}
-        onChangeText={setQuery}
+        onChangeText={(text) => setQuery(text)}
+        keyboardType="default"
+        autoCapitalize="none"
+        autoCorrect={false}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
