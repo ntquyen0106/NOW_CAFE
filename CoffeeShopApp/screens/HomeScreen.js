@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, Button, ScrollView, SafeAreaView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
@@ -9,73 +9,57 @@ import { useSelector, useDispatch } from "react-redux";
 import { setForceBlur } from "../redux/useSlice";
 
 
-const mockProducts = [
-  {
-    sanpham_id: "SP0002",
-    name: "Trà đào cam sả",
-    price: 35,
-    category: "Trà",
-    image: "https://res.cloudinary.com/dgqppqcbd/image/upload/v1739955549/Tr%C3%A0_%C4%91%C3%A0o_cam_s%E1%BA%A3_t7frww.png",
-    description: "Trà đào cam sả thơm ngon, thanh mát, giải nhiệt hiệu quả.",
-    rate: 4.9,
-    like: 200,
-    quantity: 10,
-  },
-  {
-    sanpham_id: "SP0003",
-    name: "Cà phê sữa đá",
-    price: 25,
-    category: "Cà phê",
-    image: "https://res.cloudinary.com/dgqppqcbd/image/upload/v1739955549/Cafe_sua_da.png",
-    description: "Cà phê sữa đá truyền thống, vị đậm đà, thơm ngon.",
-    rate: 4.8,
-    like: 150,
-    quantity: 8,
-  },
-  {
-    sanpham_id: "SP0004",
-    name: "Matcha đá xay",
-    price: 40,
-    category: "Matcha",
-    image: "https://res.cloudinary.com/dgqppqcbd/image/upload/v1739955549/Matcha_da_xay.png",
-    description: "Matcha đá xay thơm ngon, béo ngậy, mát lạnh sảng khoái.",
-    rate: 4.7,
-    like: 180,
-    quantity: 12,
-  },
-  {
-    sanpham_id: "SP0005",
-    name: "Matcha đá xay",
-    price: 40000,
-    category: "Matcha",
-    image: "https://res.cloudinary.com/dgqppqcbd/image/upload/v1739955549/Matcha_da_xay.png",
-    description: "Matcha đá xay thơm ngon, béo ngậy, mát lạnh sảng khoái.",
-    rate: 4.7,
-    like: 180,
-    quantity: 12,
-  },
-  {
-    sanpham_id: "SP0006",
-    name: "Matcha đá xay",
-    price: 40000,
-    category: "Matcha",
-    image: "https://res.cloudinary.com/dgqppqcbd/image/upload/v1739955549/Matcha_da_xay.png",
-    description: "Matcha đá xay thơm ngon, béo ngậy, mát lạnh sảng khoái.",
-    rate: 4.7,
-    like: 180,
-    quantity: 12,
-  },
-];
+
 
 const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const forceBlur = useSelector((state) => state.focus.forceBlur); // Lấy forceBlur từ Redux
-
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedType, setSelectedType] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handlePressOutside = () => {
     Keyboard.dismiss(); 
     dispatch(setForceBlur(true)); // Ép SearchBar mất focus
   };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/products"); // Đổi IP nếu chạy trên thiết bị thật
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("❌ Lỗi khi lấy sản phẩm:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleSelectType = (type) => {
+    setSelectedType((prevType) => (prevType === type ? null : type)); // Cập nhật state khi chọn loại nước
+    handlePressOutside();
+  };
+
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedType ? product.category === selectedType : true;
+    const regex = new RegExp(searchQuery.trim(), "i"); // "i" để không phân biệt hoa thường
+    const matchesSearch = searchQuery
+    ? regex.test(product.name) || regex.test(product.description)
+    : true;
+  
+    return matchesCategory && matchesSearch;
+  });
+  
+
+    const handleSearch = (query) => {
+      setSearchQuery(query);
+      handlePressOutside();
+    }
+
 
   return (
     <TouchableWithoutFeedback 
@@ -85,25 +69,21 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Navbar user={{ name: "Như Ý" }} />
       <Text style={styles.title}>What would you like to drink today?</Text>
-      <SearchBar
-        onSearch={(query) =>
-          console.log(`Searching for products related to: ${query}`)
-              
-        }
-        forceBlur = {forceBlur}
-      />
+      <SearchBar onSearch={handleSearch} forceBlur={forceBlur} />
+
       <View style ={styles.type}> 
         <CoffeeTypeTabs
-        onSelect={(type) => {console.log(`Selected type: ${type}`); handlePressOutside();}}
-        
+        onSelect={handleSelectType}     
       />
     </View>
        
     <View style={styles.productContainer}>
         <ScrollView contentContainerStyle={styles.productList} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" > 
-          {mockProducts.map((product) => (
-            <Product key={product.sanpham_id} product={product} />
-          ))}
+          {loading ? (
+              <Text style={styles.loadingText}>Đang tải sản phẩm...</Text>
+            ) : (
+              filteredProducts.map((product) => <Product key={product.sanpham_id} product={product} />)
+            )}
         </ScrollView>
       </View>
 

@@ -58,7 +58,7 @@ export default function ProductDetail() {
             </View>
             <Text style={styles.description}>{product.description}</Text>
             <View style={styles.infoRow}>
-              <Text style={styles.price}>${(product.price + 3).toFixed(2)}</Text>
+              <Text style={styles.price}>${(product.price ).toFixed(2)}</Text>
               <Text style={styles.sold}>Sold: {product.quantity}</Text>
             </View>
             

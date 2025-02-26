@@ -2,23 +2,23 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 
 const coffeeTypes = [
-  "Popular",
-  "Black coffee",
-  "Winter special",
-  "Decaf",
-  "Espresso",
-  "Latte",
-  "Cappuccino",
-  "Mocha"
+  "Cà phê",
+  "Sinh tố",
+  "Trà",
+  "Nước ép",
+  "Đồ đá xay",
+  "Bánh ngọt"
 ];
 
 export default function CoffeeTypeTabs({ onSelect }) {
-  const [selectedType, setSelectedType] = useState("Popular");
+  const [selectedType, setSelectedType] = useState(null);
 
   const handleSelect = (type) => {
-    setSelectedType(type);
-    if (onSelect) onSelect(type);
+    const newType = selectedType === type ? null : type;
+    setSelectedType(newType);
+    if (onSelect) onSelect(newType); // Gửi `newType` để cập nhật state ở HomeScreen
   };
+  
 
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.container} > 

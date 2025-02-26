@@ -27,6 +27,7 @@ import OrderDetailScreens from "./screens/OderDetailScreen.js";
 import ReviewScreens from "./screens/ReviewScreen.js";
 import ReviewDetailScreen from "./screens/ReviewDetailScreen.js";
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -169,6 +170,7 @@ export default function App() {
             component={ReviewDetailScreen}
             options={{ headerShown: false }}
           />
+
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
