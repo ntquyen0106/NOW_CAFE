@@ -11,7 +11,9 @@ import {
   ImageBackground,
   SafeAreaView,
   Platform,
-  StatusBar
+  StatusBar,
+  Alert
+
 } from "react-native";
 import { Feather } from "@expo/vector-icons"; // Import Feather icons
 
@@ -40,7 +42,42 @@ const SignInScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName: username, passWord: password }), // Nếu API nhận passWord thì giữ nguyên
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        Alert.alert("Thành công", "Đăng nhập thành công!");
+        navigation.navigate("Home");
+      } else {
+        Alert.alert("Thất bại", data.message || "Tên đăng nhập hoặc mật khẩu không đúng!");
+      }
+    } catch (error) {
+      console.error("Lỗi đăng nhập:", error);
+      Alert.alert(
+        "Lỗi",
+        error.message.includes("Network request failed")
+          ? "Không thể kết nối đến server! Vui lòng kiểm tra mạng."
+          : "Đã có lỗi xảy ra, vui lòng thử lại sau."
+      );
+    }
+  };
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
@@ -105,7 +142,9 @@ const SignInScreen = ({ navigation }) => {
                 <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.loginButton}>
+              <TouchableOpacity style={styles.loginButton}
+              onPress={handleLogin}
+              >
                 <Text style={styles.loginButtonText}>Login</Text>
               </TouchableOpacity>
 

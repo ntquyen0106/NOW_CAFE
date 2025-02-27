@@ -24,18 +24,24 @@ mongoose
 const AccountSchema = new mongoose.Schema({
   userName: String,
   passWord: String,
-  userId: String,
+  userID: String,
 });
 
 const Account = mongoose.model("Account", AccountSchema, "Account");
 
 
-// Lấy danh sách items
-app.get("/api/account", async (req, res) => {
+// Kiểm tra đăng nhập
+app.post("/api/login", async (req, res) => {
+  const { userName, passWord } = req.body; // Nhận dữ liệu từ client
   try {
-    const accounts = await Account.find({}); // Lấy toàn bộ user
-    console.log("📌 Dữ liệu từ MongoDB:", accounts);
-    res.json(accounts);
+    const user = await Account.findOne({ userName, passWord }); // Tìm user trong DB
+
+    if (user) {
+      res.json({ success: true, message: "Đăng nhập thành công", user });
+      console.log(userName, passWord);
+    } else {
+      res.status(401).json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+    }
   } catch (error) {
     console.error("❌ Lỗi API:", error);
     res.status(500).json({ message: "Lỗi server", error });
@@ -43,6 +49,7 @@ app.get("/api/account", async (req, res) => {
 });
 
 
+ 
 // Chạy server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
