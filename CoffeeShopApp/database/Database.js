@@ -48,9 +48,35 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// Định nghĩa Schema và Model cho sản phẩm
+const ProductSchema = new mongoose.Schema({
+  sanpham_id: String,
+  name: String,
+  price: Number,
+  category: String,
+  image: String,
+  description: String,
+  rate: Number,
+  like: Number,
+  quantity: Number,
+});
+
+const Product = mongoose.model("Product", ProductSchema, "Product");
+
+// API lấy danh sách sản phẩm
+app.get("/api/products", async (req, res) => {
+  try {
+    const products = await Product.find({});
+    console.log("📌 Dữ liệu từ MongoDB:", products);
+    res.json(products);
+  } catch (error) {
+    console.error("❌ Lỗi API:", error);
+    res.status(500).json({ message: "Lỗi server", error });
+  }
+});
 
  
 // Chạy server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 

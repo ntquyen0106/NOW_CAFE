@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, Keyboard } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite } from "../redux/favoritesSlice";
 import { useNavigation } from "@react-navigation/native";
 import useAddToCart from "../hooks/useAddToCart";
+import { setForceBlur } from "../redux/useSlice";
 
 export default function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ export default function ProductCard({ product }) {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
+                Keyboard.dismiss(); 
                 dispatch(setForceBlur(true));
                 addToCart();
               }}
