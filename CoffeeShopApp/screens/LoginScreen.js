@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { 
   View, 
   Text, 
@@ -7,8 +7,21 @@ import {
   StyleSheet, 
   ScrollView, 
   Dimensions, 
-  Image 
+  Image,
+  Alert,
+  Platform,
 } from "react-native";
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
+import * as Facebook from "expo-auth-session/providers/facebook";
+import * as Google from "expo-auth-session/providers/google";
+import { auth } from "../config"; // Import đúng từ file cấu hình
+import { signInWithCredential } from "firebase/auth";
+import { getAuth,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
+
+
 
 // Lấy kích thước màn hình
 const { width, height } = Dimensions.get("window");
@@ -36,7 +49,100 @@ const OrDivider = () => {
   );
 };
 
+
 const LoginScreen = ({ navigation }) => {
+  const [userInfo, setUserInfo] = useState(null);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
+
+
+  // const [request1, response1, promptAsync1] = Facebook.useAuthRequest({
+  //   clientId: "1560356044668601", // Thay bằng App ID của bạn
+  //   scopes: ["public_profile", "email"],
+  // });
+
+  // useEffect(() => {
+  //   const fetchFacebookUser = async () => {
+  //     if (response1?.type === "success" && response1.authentication?.accessToken) {
+  //       try {
+  //         const res = await fetch(
+  //           `https://graph.facebook.com/me?access_token=${response1.authentication.accessToken}&fields=id,name,email,picture`
+  //         );
+  //         const data = await res.json();
+  
+  //         if (data.error) {
+  //           console.error("Lỗi API Facebook:", data.error);
+  //           return;
+  //         }
+  //         setUser(data);
+  //         navigation.navigate("Home");
+  //         console.log(data.email);
+  //       } catch (error) {
+  //         console.error("Lỗi khi lấy dữ liệu Facebook:", error);
+  //       }
+  //     }
+  //   };
+  
+  //   fetchFacebookUser();
+  // }, [response1]);
+
+  // const redirectUri = AuthSession.makeRedirectUri({ useProxy: true }); // Tạo URI tự động
+  
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   clientId: "843660951518-c702nqvtd7q27j3aa18ddi3npjrcboq3.apps.googleusercontent.com",
+  //   redirectUri, // Dùng URI tự động
+  //   scopes: ["openid", "profile", "email"],
+  //   useProxy: true,  // Quan trọng
+  // });
+  
+  // console.log("Redirect URI:", redirectUri);
+  // function onAuthStateChanged(user) {
+  //   setUser(user);
+  //   if (initializing) setInitializing(false);
+  // }
+
+  // useEffect(() => {
+  //   const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber; // Unsubscribe khi unmount
+  // }, []);
+
+  // Xử lý đăng nhập với Google
+  // const onGoogleButtonPress = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true }); // Kiểm tra Play Services
+  //     const { idToken } = await GoogleSignin.signIn();
+  //     const googleCredential = GoogleAuthProvider.credential(idToken);
+  
+  //     // Đăng nhập Firebase
+  //     const userCredential = await signInWithCredential(auth, googleCredential);
+  //     console.log("Đăng nhập thành công:", userCredential.user.email);
+  
+  //     // Chuyển sang màn hình Home
+  //     navigation.navigate("Home", { email: userCredential.user.email, displayName: userCredential.user.displayName });
+  
+  //   } catch (error) {
+  //     console.error("Lỗi đăng nhập:", error);
+  //   }
+  // };
+  //if (initializing) return null;
+  GoogleSignin.configure({
+    webClientId: "843660951518-c702nqvtd7q27j3aa18ddi3npjrcboq3.apps.googleusercontent.com", // Thay thế bằng Web Client ID từ Firebase Console
+  });
+  
+  async function onGoogleButtonPress() {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+  
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log("✅ Đăng nhập thành công:", result.user.email,result.user.displayName);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.error("❌ Lỗi đăng nhập Google:", error);
+    }
+  }
+  
+
   return (
     <ScrollView 
       contentContainerStyle={styles.container}
@@ -82,13 +188,18 @@ const LoginScreen = ({ navigation }) => {
             <OrDivider />
 
             <View style={styles.socialButtonsContainer}>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity style={styles.socialButton}
+                onPress={() => onGoogleButtonPress().then(() => console.log('Signed in with Google!'))}
+                
+               >
                 <Image 
                   source={require("../assets/icons/google.png")}
                   style={styles.socialIcon}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity style={styles.socialButton}
+             
+              >
                 <Image 
                   source={require("../assets/icons/facebook.png")}
                   style={styles.socialIcon}

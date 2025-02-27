@@ -13,13 +13,24 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.CoffeeShopApp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "supportsTablet": true
+      "googleServicesFile": "./google-services.json",
+      "supportsTablet": true,
+      "package": "com.anonymous.CoffeeShopApp"
     },
     "web": {
       "supportsTablet": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7c7baf17-23d6-4b1f-a74e-d6a1ab49131c"
+      }
     }
   }
 }
