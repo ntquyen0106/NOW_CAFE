@@ -5,19 +5,27 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useRoute } from "@react-navigation/native";
 import useAddToCart from "../hooks/useAddToCart";
-
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../redux/favoritesSlice";
 
 const { width } = Dimensions.get("window");
 
 export default function ProductDetail() {
   const route = useRoute();
   const product = route.params.product;
-  const addToCart = useAddToCart(product); // 📌 Gọi hook
+  const addToCart = useAddToCart(product);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("350 ml");
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [note, setNote] = useState("");
-  const [liked, setLiked] = useState(false);
+
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.favorites);
+  const isFavorite = favorites.some((item) => item.sanpham_id === product.sanpham_id);
+
+  const handleToggleFavorite = () => {
+    dispatch(toggleFavorite(product));
+  };
 
   const reviews = [
     { username: "NguyenVanA", comment: "Trà rất ngon, thơm và mát!", rating: 5, date: "02/20/2025" },
@@ -41,79 +49,77 @@ export default function ProductDetail() {
       ))}
     </View>
   );
-   
 
   return (
     <View style={styles.container}>
       <Navbar user={{ name: "Như Ý", avatar: "https://example.com/avatar.jpg" }} />
       <Image source={{ uri: product.image }} style={styles.productImage} />
       
-        <View style={styles.contentContainer}>
-          <View style={styles.productCard}>
-            <View style={styles.headerRow}>
-              <Text style={styles.productTitle}>{product.category} - {product.name}</Text>
-              <TouchableOpacity onPress={() => setLiked(!liked)}>
-                <FontAwesome name={liked ? "heart" : "heart-o"} size={24} color="#e5b788" />
+      <View style={styles.contentContainer}>
+        <View style={styles.productCard}>
+          <View style={styles.headerRow}>
+            <Text style={styles.productTitle}>{product.category} - {product.name}</Text>
+            <TouchableOpacity onPress={handleToggleFavorite}>
+              <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={24} color="#e5b788" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.description}>{product.description}</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.price}>${(product.price ).toFixed(2)}</Text>
+            <Text style={styles.sold}>Sold: {product.quantity}</Text>
+          </View>
+          
+          <Text style={styles.label}>Size</Text>
+          <View style={styles.sizeContainer}>
+            {[
+              { size: "250 ml", icon: "coffee" },
+              { size: "350 ml", icon: "coffee" },
+              { size: "450 ml", icon: "coffee" }
+            ].map(({ size, icon }) => (
+              <TouchableOpacity
+                key={size}
+                style={[styles.sizeButton, selectedSize === size && styles.selectedSize]}
+                onPress={() => setSelectedSize(size)}
+              >
+                <FontAwesome name={icon} size={16} color="white" style={styles.sizeIcon} />
+                <Text style={styles.sizeText}>{size}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <Text style={styles.label}>Note</Text>
+          <TextInput
+            style={styles.noteInput}
+            placeholder="Thêm ghi chú..."
+            value={note}
+            onChangeText={setNote}
+          />
+
+          <View style={styles.cartContainer}>
+            <View style={styles.quantityContainer}>
+              <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))} style={styles.quantityButton}>
+                <FontAwesome name="minus" size={9} color="#FFF" />
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{quantity}</Text>
+              <TouchableOpacity onPress={() => setQuantity(quantity + 1)} style={styles.quantityButton}>
+                <FontAwesome name="plus" size={9} color="#FFF" />
               </TouchableOpacity>
             </View>
-            <Text style={styles.description}>{product.description}</Text>
-            <View style={styles.infoRow}>
-              <Text style={styles.price}>${(product.price ).toFixed(2)}</Text>
-              <Text style={styles.sold}>Sold: {product.quantity}</Text>
-            </View>
-            
-            <Text style={styles.label}>Size</Text>
-            <View style={styles.sizeContainer}>
-              {[
-                { size: "250 ml", icon: "coffee" },
-                { size: "350 ml", icon: "coffee" },
-                { size: "450 ml", icon: "coffee" }
-              ].map(({ size, icon }) => (
-                <TouchableOpacity
-                  key={size}
-                  style={[styles.sizeButton, selectedSize === size && styles.selectedSize]}
-                  onPress={() => setSelectedSize(size)}
-                >
-                  <FontAwesome name={icon} size={16} color="white" style={styles.sizeIcon} />
-                  <Text style={styles.sizeText}>{size}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={styles.label}>Note</Text>
-            <TextInput
-              style={styles.noteInput}
-              placeholder="Thêm ghi chú..."
-              value={note}
-              onChangeText={setNote}
-            />
-
-            <View style={styles.cartContainer}>
-              <View style={styles.quantityContainer}>
-                <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))} style={styles.quantityButton}>
-                  <FontAwesome name="minus" size={9} color="#FFF" />
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{quantity}</Text>
-                <TouchableOpacity onPress={() => setQuantity(quantity + 1)} style={styles.quantityButton}>
-                  <FontAwesome name="plus" size={9} color="#FFF" />
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart()}>
-                <Text style={styles.addToCartText}>Add to Cart</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.addToCartButton} onPress={() => addToCart(quantity)}>
+              <Text style={styles.addToCartText}>Add to Cart</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.headerRow}><Text style={styles.reviewHeader}>Đánh giá khách hàng ({reviews.length})</Text>
-          <TouchableOpacity onPress={() => setShowAllReviews(!showAllReviews)}>
-            <Text style={{ color: "#E5B788", textAlign: 'right', fontSize: 16 }}>
-              {showAllReviews ? "Ẩn" : "Hiện thêm"}
-            </Text>
-          </TouchableOpacity>
-          </View>
-          <ScrollView   contentContainerStyle={styles.scrollContainer} nestedScrollEnabled={true}
-  keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}> 
-            <View style={styles.reviewHeaderContainer}>
-            
+        </View>
+        <View style={styles.headerRow}><Text style={styles.reviewHeader}>Đánh giá khách hàng ({reviews.length})</Text>
+        <TouchableOpacity onPress={() => setShowAllReviews(!showAllReviews)}>
+          <Text style={{ color: "#E5B788", textAlign: 'right', fontSize: 16 }}>
+            {showAllReviews ? "Ẩn" : "Hiện thêm"}
+          </Text>
+        </TouchableOpacity>
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer} nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}> 
+          <View style={styles.reviewHeaderContainer}>
             {visibleReviews.map((user, index) => (
               <View key={index} style={styles.reviewCard}>
                 <View style={styles.reviewUserRow}>
@@ -126,9 +132,8 @@ export default function ProductDetail() {
               </View>
             ))}
           </View>
-          </ScrollView>
-          
-        </View>
+        </ScrollView>
+      </View>
       
       <Footer />
     </View>
@@ -136,10 +141,9 @@ export default function ProductDetail() {
 }
 
 
-
 const styles = StyleSheet.create({
   container: {  flex: 1, minHeight: '100%',backgroundColor: "#F5EBDC" },
-  productImage: { width: "100%", height: 280, resizeMode: "cover" },
+  productImage: { width: "100%", height: 280, resizeMode: "cover"},
   contentContainer: { backgroundColor: "#3B2211", paddingHorizontal: 16, paddingTop: 16, borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingVertical: 20, borderBottomColor: "#E5B788", borderBottomWidth: 2, },
   productCard: { paddingBottom: 16 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },

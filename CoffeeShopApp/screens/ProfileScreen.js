@@ -11,8 +11,8 @@ import {
   Picker,
   Platform,
 } from "react-native";
-import { Feather } from "@expo/vector-icons"; // Import Feather icons
-import Footer from "../components/Footer"; // Footer đã có sẵn trong dự án của bạn
+import { Feather } from "@expo/vector-icons";
+import Footer from "../components/Footer"; 
 
 const { width, height } = Dimensions.get("window");
 

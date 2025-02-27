@@ -18,7 +18,6 @@ export default function SearchBar({ placeholder = "Search for the drink...", onS
       onSearch(query.trim());
       setQuery("");
       Keyboard.dismiss();
-      setIsFocused(false);
     }
   };
 
@@ -35,6 +34,8 @@ export default function SearchBar({ placeholder = "Search for the drink...", onS
         autoCorrect={false}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        returnKeyType="search" // Adds a "Search" button on the keyboard
+        onSubmitEditing={handleSearch}
       />
       <TouchableOpacity onPress={handleSearch}>
         <Feather name="search" size={24} color="#A0A0A0" />
@@ -63,5 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#000",
     paddingHorizontal: 10,
+    fontFamily: "Roboto"
   },
 });
