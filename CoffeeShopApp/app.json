@@ -4,12 +4,12 @@
     "slug": "CoffeeShopApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/apple.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "scheme": "coffeeshopapp",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/images/capu.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -30,8 +30,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "7c7baf17-23d6-4b1f-a74e-d6a1ab49131c"
+        "projectId": "0b85b122-8eb3-4ed4-8e34-f4d8b2fe82bd"
       }
-    }
+    },
+    "owner": "tuanvuongg"
   }
 }
