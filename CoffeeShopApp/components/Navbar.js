@@ -39,11 +39,11 @@ export default function Navbar({ user }) {
       >
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuItem} onPress={() => {}}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Option")}>
               <Image source={{ uri: user.avatarUrl || DEFAULT_AVATAR }} style={styles.menuAvatar} />
               <Text style={styles.menuText}>Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => {}}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Contact")}>
               <Feather name="help-circle" size={24} color="black" />
               <Text style={styles.menuText}>Help</Text>
             </TouchableOpacity>
