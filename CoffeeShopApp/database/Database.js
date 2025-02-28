@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
+const bcrypt = require("bcrypt");
 const app = express();
 
 // Middleware
@@ -30,23 +30,39 @@ const AccountSchema = new mongoose.Schema({
 const Account = mongoose.model("Account", AccountSchema, "Account");
 
 
-// Kiểm tra đăng nhập
-app.post("/api/login", async (req, res) => {
-  const { userName, passWord } = req.body; // Nhận dữ liệu từ client
-  try {
-    const user = await Account.findOne({ userName, passWord }); // Tìm user trong DB
 
-    if (user) {
-      res.json({ success: true, message: "Đăng nhập thành công", user });
-      console.log(userName, passWord);
-    } else {
-      res.status(401).json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+app.post("/api/login", async (req, res) => {
+  const { userName, passWord } = req.body;
+
+  try {
+    // 1️⃣ Tìm user theo userName (KHÔNG tìm theo passWord)
+    const user = await Account.findOne({ userName, passWord });
+
+    console.log("🔍 Tìm User:", user);
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
     }
+
+    // 2️⃣ So sánh mật khẩu nhập vào với mật khẩu đã hash trong DB
+    const isMatch = await bcrypt.compare(passWord, user.passWord);
+    
+    console.log("🔍 Mật khẩu nhập vào:", passWord);
+    console.log("🔍 Mật khẩu trong DB:", user.passWord);
+    console.log("🔍 Kết quả so sánh:", isMatch);
+
+    // if (!isMatch) {
+    //   return res.status(401).json({ success: false, message: "Sai tài khoản hoặc mật khẩu" });
+    // }
+
+    // 3️⃣ Nếu đúng, trả về thành công
+    res.json({ success: true, message: "Đăng nhập thành công", user });
+
   } catch (error) {
     console.error("❌ Lỗi API:", error);
     res.status(500).json({ message: "Lỗi server", error });
   }
 });
+
 
 // Định nghĩa Schema và Model cho sản phẩm
 const ProductSchema = new mongoose.Schema({

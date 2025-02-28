@@ -50,10 +50,14 @@ const SignInScreen = ({ navigation }) => {
     }
   
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const bodyData = JSON.stringify({ userName: username, passWord: password });
+      const response = await fetch("http://localhost:5001/api/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userName: username, passWord: password }), // Nếu API nhận passWord thì giữ nguyên
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: bodyData,
       });
   
       if (!response.ok) {
@@ -64,18 +68,14 @@ const SignInScreen = ({ navigation }) => {
   
       if (data.success) {
         Alert.alert("Thành công", "Đăng nhập thành công!");
-        navigation.navigate("Home");
+        console.log("🚀 Đăng nhập thành công:", data.user);
+        navigation.navigate("Home",{user:data.user});
       } else {
         Alert.alert("Thất bại", data.message || "Tên đăng nhập hoặc mật khẩu không đúng!");
       }
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error);
-      Alert.alert(
-        "Lỗi",
-        error.message.includes("Network request failed")
-          ? "Không thể kết nối đến server! Vui lòng kiểm tra mạng."
-          : "Đã có lỗi xảy ra, vui lòng thử lại sau."
-      );
+      console.error("❌ Lỗi đăng nhập:", error);
+      Alert.alert("Lỗi", "Đã có lỗi xảy ra, vui lòng thử lại sau.");
     }
   };
   

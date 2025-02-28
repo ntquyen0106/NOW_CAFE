@@ -56,75 +56,7 @@ const LoginScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
 
 
-  // const [request1, response1, promptAsync1] = Facebook.useAuthRequest({
-  //   clientId: "1560356044668601", // Thay bằng App ID của bạn
-  //   scopes: ["public_profile", "email"],
-  // });
-
-  // useEffect(() => {
-  //   const fetchFacebookUser = async () => {
-  //     if (response1?.type === "success" && response1.authentication?.accessToken) {
-  //       try {
-  //         const res = await fetch(
-  //           `https://graph.facebook.com/me?access_token=${response1.authentication.accessToken}&fields=id,name,email,picture`
-  //         );
-  //         const data = await res.json();
-  
-  //         if (data.error) {
-  //           console.error("Lỗi API Facebook:", data.error);
-  //           return;
-  //         }
-  //         setUser(data);
-  //         navigation.navigate("Home");
-  //         console.log(data.email);
-  //       } catch (error) {
-  //         console.error("Lỗi khi lấy dữ liệu Facebook:", error);
-  //       }
-  //     }
-  //   };
-  
-  //   fetchFacebookUser();
-  // }, [response1]);
-
-  // const redirectUri = AuthSession.makeRedirectUri({ useProxy: true }); // Tạo URI tự động
-  
-  // const [request, response, promptAsync] = Google.useAuthRequest({
-  //   clientId: "843660951518-c702nqvtd7q27j3aa18ddi3npjrcboq3.apps.googleusercontent.com",
-  //   redirectUri, // Dùng URI tự động
-  //   scopes: ["openid", "profile", "email"],
-  //   useProxy: true,  // Quan trọng
-  // });
-  
-  // console.log("Redirect URI:", redirectUri);
-  // function onAuthStateChanged(user) {
-  //   setUser(user);
-  //   if (initializing) setInitializing(false);
-  // }
-
-  // useEffect(() => {
-  //   const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
-  //   return subscriber; // Unsubscribe khi unmount
-  // }, []);
-
-  // Xử lý đăng nhập với Google
-  // const onGoogleButtonPress = async () => {
-  //   try {
-  //     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true }); // Kiểm tra Play Services
-  //     const { idToken } = await GoogleSignin.signIn();
-  //     const googleCredential = GoogleAuthProvider.credential(idToken);
-  
-  //     // Đăng nhập Firebase
-  //     const userCredential = await signInWithCredential(auth, googleCredential);
-  //     console.log("Đăng nhập thành công:", userCredential.user.email);
-  
-  //     // Chuyển sang màn hình Home
-  //     navigation.navigate("Home", { email: userCredential.user.email, displayName: userCredential.user.displayName });
-  
-  //   } catch (error) {
-  //     console.error("Lỗi đăng nhập:", error);
-  //   }
-  // };
-  //if (initializing) return null;
+ 
   GoogleSignin.configure({
     webClientId: "843660951518-c702nqvtd7q27j3aa18ddi3npjrcboq3.apps.googleusercontent.com", // Thay thế bằng Web Client ID từ Firebase Console
   });
@@ -141,7 +73,19 @@ const LoginScreen = ({ navigation }) => {
       console.error("❌ Lỗi đăng nhập Google:", error);
     }
   }
-  
+  const [request, response, promptAsync] = Facebook.useAuthRequest({
+    clientId: "2670594856469458",
+  });
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { access_token } = response.params;
+      const facebookCredential = FacebookAuthProvider.credential(access_token);
+      signInWithCredential(getAuth(), facebookCredential).then((userCredential) => {
+        navigation.navigate("Home", { email: userCredential.user.email, displayName: userCredential.user.displayName });
+      });
+    }
+  }, [response]);
 
   return (
     <ScrollView 
@@ -198,7 +142,7 @@ const LoginScreen = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton}
-             
+                onPress={() => promptAsync()}
               >
                 <Image 
                   source={require("../assets/icons/facebook.png")}
