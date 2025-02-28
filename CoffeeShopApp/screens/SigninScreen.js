@@ -42,6 +42,7 @@ const SignInScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const handleLogin = async () => {
     if (!username || !password) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
