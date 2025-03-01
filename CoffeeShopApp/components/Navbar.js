@@ -1,31 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, StyleSheet, Text, Image, Modal, Dimensions } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setForceBlur } from "../redux/useSlice";
+import { setUser } from "../redux/userSlice"; // Để đảm bảo có thể sử dụng setUser
 
-const DEFAULT_AVATAR = "https://i.pravatar.cc/150"; // Ảnh avatar mặc định
+const DEFAULT_AVATAR = "https://i.pravatar.cc/150";
 const { width } = Dimensions.get("window");
 
-export default function Navbar({ user }) {
+export default function Navbar() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [menuVisible, setMenuVisible] = useState(false);
-  const dispatch = useDispatch(); // Dùng Redux dispatch để cập nhật state
+  const user = useSelector((state) => state.user.user); // Lấy thông tin người dùng từ Redux
+  const [userDetails, setUserDetails] = useState(null); // Lưu thông tin chi tiết người dùng
+
+  // Log để kiểm tra xem user từ Redux có chứa userId không
+  useEffect(() => {
+    console.log("User từ Redux:", user);
+    if (user && user.userId) { // Sử dụng userId thay vì userID
+      console.log("userId từ Redux:", user.userId);
+      fetchUserById(user.userId); // Gọi API với userId
+    } else {
+      console.log("Không tìm thấy user hoặc userId trong Redux");
+    }
+  }, [user]);
+
+  // Hàm giả lập gọi API để tìm thông tin người dùng theo userId
+  const fetchUserById = async (userId) => {
+    try {
+      console.log("Gọi API với userId:", userId); // Log khi gọi API
+      const response = await fetch(`http://localhost:5001/api/user/${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
+      console.log("Dữ liệu trả về từ API:", data); // Log dữ liệu từ API
+      if (data.success) {
+        setUserDetails(data.user);
+      } else {
+        console.log("Không tìm thấy thông tin người dùng từ API");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
 
   return (
     <View style={styles.navbar}>
       <View style={styles.userInfo}>
         <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
-            <Image source={{ uri: user.avatarUrl || DEFAULT_AVATAR }} style={styles.avatar} />
-        </TouchableOpacity >
-            <Text style={styles.greeting}>Good day, {user.name}!</Text>
+          <Image
+            source={{ uri: userDetails?.avatarUrl || DEFAULT_AVATAR }}
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+        <Text style={styles.greeting}>
+          Good day, {userDetails?.name || "Guest"}!
+        </Text>
       </View>
       <View style={styles.navIcons}>
         <TouchableOpacity onPress={() => dispatch(setForceBlur(true))}>
           <Feather name="bell" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {dispatch(setForceBlur(true)), setMenuVisible(true)}}>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(setForceBlur(true));
+            setMenuVisible(true);
+          }}
+        >
           <Feather name="menu" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -39,15 +83,30 @@ export default function Navbar({ user }) {
       >
         <TouchableOpacity style={styles.modalOverlay} onPress={() => setMenuVisible(false)}>
           <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Option")}>
-              <Image source={{ uri: user.avatarUrl || DEFAULT_AVATAR }} style={styles.menuAvatar} />
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("Option")}
+            >
+              <Image
+                source={{ uri: userDetails?.avatarUrl || DEFAULT_AVATAR }}
+                style={styles.menuAvatar}
+              />
               <Text style={styles.menuText}>Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("Contact")}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate("Contact")}
+            >
               <Feather name="help-circle" size={24} color="black" />
               <Text style={styles.menuText}>Help</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => {
+                dispatch(setUser(null)); // Xóa thông tin người dùng khi logout
+                navigation.navigate("SignIn");
+              }}
+            >
               <Feather name="log-out" size={24} color="black" />
               <Text style={styles.menuText}>Logout</Text>
             </TouchableOpacity>
@@ -70,7 +129,7 @@ const styles = StyleSheet.create({
     width: width,
     paddingTop: 35,
     paddingHorizontal: 15,
-    borderBottomLeftRadius: 30, 
+    borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     zIndex: 1,
   },
@@ -87,7 +146,7 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 18,
     fontWeight: "bold",
-    color: '#3D1B00'
+    color: "#3D1B00",
   },
   navIcons: {
     flexDirection: "row",

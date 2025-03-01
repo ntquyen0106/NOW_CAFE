@@ -12,10 +12,11 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  Alert
-
+  Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons"; // Import Feather icons
+import { useDispatch } from "react-redux"; // Import useDispatch
+import { setUser } from "../redux/userSlice"; // Import setUser
 
 const { width, height } = Dimensions.get("window");
 const scale = Math.min(width, height) / 375;
@@ -42,34 +43,39 @@ const SignInScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch(); // Khai báo và gọi useDispatch hook
 
   const handleLogin = async () => {
     if (!username || !password) {
       Alert.alert("Lỗi", "Vui lòng nhập tên đăng nhập và mật khẩu!");
       return;
     }
-  
+
     try {
       const bodyData = JSON.stringify({ userName: username, passWord: password });
       const response = await fetch("http://localhost:5001/api/login", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          "Accept": "application/json",
         },
         body: bodyData,
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
-  
+
       if (data.success) {
         Alert.alert("Thành công", "Đăng nhập thành công!");
         console.log("🚀 Đăng nhập thành công:", data.user);
-        navigation.navigate("Home",{user:data.user});
+
+        // Lưu thông tin người dùng vào Redux
+        dispatch(setUser(data.user));
+
+        navigation.navigate("Home", { user: data.user });
       } else {
         Alert.alert("Thất bại", data.message || "Tên đăng nhập hoặc mật khẩu không đúng!");
       }
@@ -78,16 +84,13 @@ const SignInScreen = ({ navigation }) => {
       Alert.alert("Lỗi", "Đã có lỗi xảy ra, vui lòng thử lại sau.");
     }
   };
-  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView 
-        contentContainerStyle={styles.container}
-        bounces={false}
-      >
+      <ScrollView contentContainerStyle={styles.container} bounces={false}>
         <ImageBackground
-          source={require("../assets/images/bg-welcome.png")} 
+          source={require("../assets/images/bg-welcome.png")}
           style={styles.background}
           resizeMode="cover"
         >
@@ -95,7 +98,7 @@ const SignInScreen = ({ navigation }) => {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Image 
+            <Image
               source={require("../assets/icons/back-arrow.png")}
               style={styles.backIcon}
             />
@@ -124,17 +127,17 @@ const SignInScreen = ({ navigation }) => {
                   secureTextEntry={!showPassword}
                   value={password}
                   onChangeText={setPassword}
-                  underlineColorAndroid="transparent" 
+                  underlineColorAndroid="transparent"
                 />
-                <TouchableOpacity 
-                  style={styles.eyeButton} 
+                <TouchableOpacity
+                  style={styles.eyeButton}
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <Feather 
-                    name={showPassword ? "eye" : "eye-off"} 
-                    size={24} 
-                    color="#230C02" 
-                    style={styles.eyeIcon} 
+                  <Feather
+                    name={showPassword ? "eye" : "eye-off"}
+                    size={24}
+                    color="#230C02"
+                    style={styles.eyeIcon}
                   />
                 </TouchableOpacity>
               </View>
@@ -143,9 +146,7 @@ const SignInScreen = ({ navigation }) => {
                 <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.loginButton}
-              onPress={handleLogin}
-              >
+              <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                 <Text style={styles.loginButtonText}>Login</Text>
               </TouchableOpacity>
 
@@ -153,19 +154,19 @@ const SignInScreen = ({ navigation }) => {
 
               <View style={styles.socialButtonsContainer}>
                 <TouchableOpacity style={styles.socialButton}>
-                  <Image 
+                  <Image
                     source={require("../assets/icons/google.png")}
                     style={styles.socialIcon}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.socialButton}>
-                  <Image 
+                  <Image
                     source={require("../assets/icons/facebook.png")}
                     style={styles.socialIcon}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.socialButton}>
-                  <Image 
+                  <Image
                     source={require("../assets/icons/apple.png")}
                     style={styles.socialIcon}
                   />
@@ -174,7 +175,7 @@ const SignInScreen = ({ navigation }) => {
 
               <View style={styles.signupContainer}>
                 <Text style={styles.signupText}>Don't have account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
                   <Text style={styles.signupLink}>Sign up</Text>
                 </TouchableOpacity>
               </View>
@@ -189,18 +190,18 @@ const SignInScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#EEDDC9',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    backgroundColor: "#EEDDC9",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   container: {
     flexGrow: 1,
   },
   background: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: normalize(30),
     left: normalize(20),
     zIndex: 1,
@@ -212,13 +213,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: normalize(20),
   },
   textContainer: {
-    alignItems: 'flex-start', 
-    width: '100%',
+    alignItems: "flex-start",
+    width: "100%",
     marginBottom: normalize(20),
     marginTop: normalize(270),
   },
@@ -229,54 +230,54 @@ const styles = StyleSheet.create({
     lineHeight: normalize(40),
   },
   inputContainer: {
-    width: '100%',
-    alignItems: 'flex-start', 
+    width: "100%",
+    alignItems: "flex-start",
   },
   inputLabel: {
-    color: '#230C02',
+    color: "#230C02",
     fontSize: normalize(15),
     marginBottom: normalize(8),
     fontWeight: "bold",
   },
   input: {
-    width: '100%',
+    width: "100%",
     borderBottomWidth: 1,
-    borderBottomColor: '#230C02',
+    borderBottomColor: "#230C02",
     fontSize: normalize(16),
-    color: '#230C02',
+    color: "#230C02",
     marginBottom: normalize(20),
-    outlineStyle: 'none',
+    outlineStyle: "none",
   },
   passwordContainer: {
-    position: 'relative',
-    width: '100%',
+    position: "relative",
+    width: "100%",
   },
   eyeButton: {
-    position: 'absolute',
-    right: normalize(0), 
-    bottom: normalize(25), 
+    position: "absolute",
+    right: normalize(0),
+    bottom: normalize(25),
   },
   eyeIcon: {
-    width: normalize(24), 
-    height: normalize(24), 
-    tintColor: '#230C02',
+    width: normalize(24),
+    height: normalize(24),
+    tintColor: "#230C02",
   },
   forgotPasswordButton: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginBottom: normalize(30),
   },
   forgotPasswordText: {
     color: "#834D1E",
     fontSize: normalize(14),
-    textDecorationLine: 'underline', 
+    textDecorationLine: "underline",
     fontWeight: "bold",
   },
   loginButton: {
-    width: '100%',
+    width: "100%",
     backgroundColor: "#3B2F2F",
     paddingVertical: normalize(15),
     borderRadius: normalize(30),
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: normalize(30),
   },
   loginButtonText: {
@@ -285,14 +286,14 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
   },
   orDividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
   },
   orDividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#230C02',
+    backgroundColor: "#230C02",
   },
   orDividerText: {
     color: "#230C02",
@@ -301,26 +302,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   socialButtonsContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center', 
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   socialButton: {
     width: normalize(40),
     height: normalize(40),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   socialIcon: {
     width: normalize(24),
     height: normalize(24),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   signupContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center', 
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   signupText: {
     color: "#3B2F2F",
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     color: "#834D1E",
     fontSize: normalize(14),
     fontWeight: "bold",
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
 });
 

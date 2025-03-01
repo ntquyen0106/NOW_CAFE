@@ -69,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={handlePressOutside} accessible={false}>
       <SafeAreaView style={styles.container}>
-        <Navbar user={{ name: "Như Ý" }} />
+        <Navbar />
         <Text style={styles.title}>What would you like to drink today?</Text>
         <SearchBar onSearch={handleSearch} />
         <View style={styles.type}>

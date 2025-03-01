@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,19 +8,94 @@ import {
   Dimensions,
   Image,
   TextInput,
-  Picker,
-  Platform,
+  Modal,
 } from "react-native";
-import { Feather } from "@expo/vector-icons"; 
-import Footer from "../components/Footer"; 
+import { Feather } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function ProfileScreen({ navigation }) {
-  const [gender, setGender] = useState("");
-  const [birthYear, setBirthYear] = useState("");
-  const [phoneArea, setPhoneArea] = useState("+84");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    firstName: "",
+    address: "",
+    phoneNumber: "",
+    email: "",
+    points: "",
+  });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
+  useEffect(() => {
+    if (user && user.userId) {
+      fetchUserDetails(user.userId);
+    }
+  }, [user]);
+
+  const fetchUserDetails = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/user/${userId}`);
+      const data = await response.json();
+      if (data.success) {
+        const { name, phoneNumber, address, points, email } = data.user;
+        const [firstName, ...rest] = name.split(" ");
+        setFormData({
+          name: rest.join(" ") || "",
+          firstName: firstName || "",
+          address: address || "",
+          phoneNumber: phoneNumber || "",
+          points: points || "",
+          email: email || "",
+        });
+      } else {
+        setModalMessage(data.message);
+        setModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      setModalMessage("Không thể lấy thông tin người dùng.");
+      setModalVisible(true);
+    }
+  };
+
+  const handleSave = async () => {
+    const fullName = `${formData.firstName} ${formData.name}`.trim();
+    const updatedData = {
+      user_id: user.userId,
+      name: fullName,
+      phoneNumber: formData.phoneNumber,
+      address: formData.address,
+      points: formData.points,
+      email: formData.email,
+    };
+
+    try {
+      const response = await fetch(`http://localhost:5001/api/user/${user.userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setModalMessage("Thông tin đã được cập nhật thành công!");
+        setModalVisible(true);
+        setIsEditing(false);
+        dispatch(setUser({ ...user, ...updatedData }));
+      } else {
+        setModalMessage(data.message);
+        setModalVisible(true);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lưu thông tin:", error);
+      setModalMessage("Không thể lưu thông tin.");
+      setModalVisible(true);
+    }
+  };
 
   return (
     <View style={styles.outerContainer}>
@@ -47,138 +122,120 @@ export default function ProfileScreen({ navigation }) {
           <View style={styles.formSection}>
             <View style={styles.formHeader}>
               <Text style={styles.formTitle}>Thông Tin Chung</Text>
-              <TouchableOpacity>
-                <Text style={styles.editLink}>Sửa</Text>
+              <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
+                <Text style={styles.editLink}>{isEditing ? "Hủy" : "Sửa"}</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={styles.formGroup}>
-              <View style={styles.inputRow}>
-                <TextInput
-                  style={[styles.input, styles.halfInput]}
-                  placeholder="Tên"
-                  placeholderTextColor="#999"
-                />
-                <TextInput
-                  style={[styles.input, styles.halfInput]}
-                  placeholder="Họ"
-                  placeholderTextColor="#999"
-                />
-              </View>
+            <Text style={styles.label}>Họ và Tên:</Text>
+            <TextInput
+              style={[styles.input, isEditing && styles.editableInput]}
+              value={`${formData.firstName} ${formData.name}`}
+              onChangeText={(text) => {
+                const [firstName, ...rest] = text.split(" ");
+                setFormData({ ...formData, firstName, name: rest.join(" ") });
+              }}
+              editable={isEditing}
+            />
 
-              <View style={styles.inputRow}>
-                <Picker
-                  selectedValue={gender}
-                  style={[styles.input, styles.halfInput, styles.genderPicker]}
-                  onValueChange={(itemValue) => setGender(itemValue)}
-                >
-                  <Picker.Item label="Chọn Giới Tính" value="" />
-                  <Picker.Item label="Nam" value="male" />
-                  <Picker.Item label="Nữ" value="female" />
-                  <Picker.Item label="Khác" value="other" />
-                </Picker>
-                <TextInput
-                  style={[styles.input, styles.halfInput]}
-                  placeholder="Năm Sinh"
-                  placeholderTextColor="#999"
-                  keyboardType="numeric"
-                  value={birthYear}
-                  onChangeText={setBirthYear}
-                />
-              </View>
+            <Text style={styles.label}>Địa chỉ:</Text>
+            <TextInput
+              style={[styles.input, isEditing && styles.editableInput]}
+              value={formData.address}
+              onChangeText={(text) => setFormData({ ...formData, address: text })}
+              editable={isEditing}
+            />
 
-              <View style={styles.phoneSection}>
-                <Text style={styles.inputLabel}>Số Điện Thoại</Text>
-                <View style={styles.phoneRow}>
-                  <Picker
-                    selectedValue={phoneArea}
-                    style={[styles.input, styles.phoneAreaPicker]}
-                    onValueChange={(itemValue) => setPhoneArea(itemValue)}
-                  >
-                    <Picker.Item label="+84" value="+84" />
-                    <Picker.Item label="+1" value="+1" />
-                    <Picker.Item label="+44" value="+44" />
-                  </Picker>
-                  <TextInput
-                    style={[styles.input, styles.phoneInput]}
-                    placeholder="Số Điện Thoại"
-                    placeholderTextColor="#999"
-                    keyboardType="phone-pad"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                  />
-                </View>
-              </View>
+            <Text style={styles.label}>Số Điện Thoại:</Text>
+            <TextInput
+              style={[styles.input, isEditing && styles.editableInput]}
+              keyboardType="phone-pad"
+              value={formData.phoneNumber}
+              onChangeText={(text) => setFormData({ ...formData, phoneNumber: text })}
+              editable={isEditing}
+            />
 
-              <View style={styles.emailSection}>
-                <Text style={styles.inputLabel}>Email</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  placeholderTextColor="#999"
-                />
-              </View>
-            </View>
+            <Text style={styles.label}>Email:</Text>
+            <TextInput
+              style={[styles.input, isEditing && styles.editableInput]}
+              value={formData.email}
+              onChangeText={(text) => setFormData({ ...formData, email: text })}
+              editable={isEditing}
+            />
 
-            <TouchableOpacity style={styles.verifyButton}>
-              <Text style={styles.verifyText}>Xác Nhận</Text>
-            </TouchableOpacity>
+            <Text style={styles.label}>Điểm tích lũy:</Text>
+            <TextInput
+              style={[styles.input, isEditing && styles.editableInput]}
+              keyboardType="numeric"
+              value={formData.points.toString()}
+              onChangeText={(text) => setFormData({ ...formData, points: text })}
+              editable={isEditing}
+            />
+
+            {isEditing && (
+              <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <Text style={styles.saveText}>Lưu</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
-
-        <Footer />
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-    backgroundColor: "#F9F6F0",
-  },
-  backButton: {
-    top: 20,
-    left: 15,
-    zIndex: 1,
-  },
-  mainContainer: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 12,
-  },
-  scrollContent: {
-    paddingBottom: 10,
-  },
+  outerContainer: { flex: 1, backgroundColor: "#F9F6F0" },
+  backButton: { top: 20, left: 15, zIndex: 1 },
+  mainContainer: { flex: 1 },
+  container: { flex: 1, paddingHorizontal: 12 },
+  scrollContent: { paddingBottom: 10 },
   profileSection: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 8,
     marginTop: 30,
     marginBottom: 20,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   memberStatus: {
     fontSize: 16,
-    color: '#666',
+    color: "#666",
     marginBottom: 12,
   },
   balanceContainer: {
     marginTop: 5,
-    width: '100%',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
   balanceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   balanceText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     marginLeft: 10,
   },
   icon: {
@@ -186,83 +243,80 @@ const styles = StyleSheet.create({
     height: 24,
   },
   formSection: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 8,
     marginTop: 5,
     padding: 20,
   },
   formHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   formTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
   },
   editLink: {
-    color: '#D83C3D',
+    color: "#D83C3D",
     fontSize: 16,
   },
-  formGroup: {
-    gap: 20,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    gap: 15,
-    marginBottom: 10,
+  label: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 8,
   },
   input: {
-    backgroundColor: '#F9F6F0',
+    backgroundColor: "#F9F6F0",
     padding: 13,
     borderRadius: 8,
     fontSize: 16,
-    width: '100%',
-  },
-  halfInput: {
-    flex: 1,
-  },
-  genderPicker: {
-    height: 50, 
-    paddingLeft: 10,
-  },
-  phoneSection: {
     marginBottom: 10,
   },
-  emailSection: {
-    marginBottom: 20,
+  editableInput: {
+    backgroundColor: "#fff",
+    borderColor: "#ccc",
+    borderWidth: 1,
   },
-  inputLabel: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 12,
-  },
-  phoneRow: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  phoneAreaPicker: {
-    flex: 0.3,
-    height: 50,
-  },
-  phoneInput: {
-    flex: 1,
-    padding: 13,
-  },
-  verifyButton: {
-    backgroundColor: '#D83C3D',
-    paddingHorizontal: 20,
+  saveButton: {
+    backgroundColor: "#D83C3D",
     paddingVertical: 15,
     borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 5,
+    alignItems: "center",
   },
-  verifyText: {
-    color: '#fff',
+  saveText: {
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: 300,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalButton: {
+    backgroundColor: "#D83C3D",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });

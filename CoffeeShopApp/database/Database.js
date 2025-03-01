@@ -24,12 +24,10 @@ mongoose
 const AccountSchema = new mongoose.Schema({
   userName: String,
   passWord: String,
-  userID: String,
+  userId: String,
 });
 
 const Account = mongoose.model("Account", AccountSchema, "Account");
-
-
 
 app.post("/api/login", async (req, res) => {
   const { userName, passWord } = req.body;
@@ -63,7 +61,6 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-
 // Định nghĩa Schema và Model cho sản phẩm
 const ProductSchema = new mongoose.Schema({
   sanpham_id: String,
@@ -91,6 +88,59 @@ app.get("/api/products", async (req, res) => {
   }
 });
 
+// Định nghĩa Schema và Model cho collection user
+const UserSchema = new mongoose.Schema({
+  user_id: String,
+  name: String,
+  phoneNumber: String,
+  address: String,
+  points: Number,
+  email: String,
+});
+
+const User = mongoose.model("User", UserSchema, "Users"); // Sử dụng collection "User"
+
+// Route để lấy thông tin người dùng theo userId từ collection User
+app.get("/api/user/:userId", async (req, res) => {
+  try {
+    console.log("🔍 Gọi API với userId:", req.params.userId);
+
+    // Sử dụng đúng tên collection
+    const user = await User.findOne({ user_id: req.params.userId });
+
+    console.log("📌 Kết quả từ MongoDB:", user);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "Không tìm thấy người dùng" });
+    }
+
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error("❌ Lỗi API:", error);
+    res.status(500).json({ message: "Lỗi server", error });
+  }
+});
+
+// Route để cập nhật thông tin người dùng
+app.put("/api/user/:userId", async (req, res) => {
+  try {
+    console.log("🔍 Cập nhật người dùng với userId:", req.params.userId);
+    console.log("Dữ liệu nhận được:", req.body);
+    const updatedUser = await User.findOneAndUpdate(
+      { user_id: req.params.userId },
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
+    console.log("📌 Kết quả sau khi cập nhật:", updatedUser);
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "Không tìm thấy người dùng" });
+    }
+    res.json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error("❌ Lỗi API:", error);
+    res.status(500).json({ message: "Lỗi server", error });
+  }
+});
  
 // Chạy server
 const PORT = process.env.PORT || 5001;
