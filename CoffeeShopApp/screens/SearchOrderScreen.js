@@ -1,39 +1,43 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import Footer from "../components/Footer";
 
 const SearchOrderScreen = () => {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState("");
-  const data = ["Cà phê sữa đá", "Trà sữa", "Bánh Tiramisu", "Bánh Flan"]; // Dữ liệu giả lập
-
-  const filteredData = data.filter(item => item.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <View style={styles.container}>
-      {/* Ô nhập tìm kiếm */}
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Nhập từ khóa..."
-        value={searchText}
-        onChangeText={setSearchText}
-      />
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Tìm kiếm đơn hàng</Text>
+        <View style={{ width: 24 }} /> {/* Placeholder để căn giữa tiêu đề */}
+      </View>
 
-      {/* Danh sách kết quả */}
-      <FlatList
-        data={filteredData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}>
-            <Text>{item}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      {/* Ô tìm kiếm */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Nhập từ khoá tìm kiếm"
+          placeholderTextColor="#AAA"
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+      </View>
 
-      {/* Nút quay lại */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backText}>← Quay lại</Text>
-      </TouchableOpacity>
+      {/* Nội dung kết quả (Hiện tại để trống) */}
+      <View style={styles.resultContainer}>
+        {/* Kết quả tìm kiếm sẽ hiển thị ở đây */}
+      </View>
+
+      {/* Footer */}
+      <Footer />
     </View>
   );
 };
@@ -41,9 +45,43 @@ const SearchOrderScreen = () => {
 export default SearchOrderScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
-  searchInput: { borderWidth: 1, padding: 10, marginBottom: 10 },
-  item: { padding: 15, borderBottomWidth: 1 },
-  backButton: { marginTop: 20, backgroundColor: "#ccc", padding: 10, alignItems: "center" },
-  backText: { fontSize: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    paddingTop: 50,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F5F5F5",
+    borderRadius: 10,
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#333",
+  },
+  resultContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginTop: 10,
+  },
 });
