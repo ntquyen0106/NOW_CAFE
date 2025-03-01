@@ -27,8 +27,6 @@ import OrderDetailScreens from "./screens/OderDetailScreen.js";
 import ReviewScreens from "./screens/ReviewScreen.js";
 import ReviewDetailScreen from "./screens/ReviewDetailScreen.js";
 import SearchOrderScreen from "./screens/SearchOrderScreen.js";
-
-
 const Stack = createStackNavigator();
 
 export default function App() {
